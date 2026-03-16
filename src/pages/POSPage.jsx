@@ -221,14 +221,17 @@ export default function POSPage() {
                 style={{ animationDelay: `${i * 0.05}s` }}
               >
                 {/* Stock Badge */}
-                <div className={`absolute top-3 right-3 px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                <div className={`absolute top-3 right-3 px-2 py-0.5 rounded-full text-[10px] font-bold flex flex-col items-end ${
                   product.stock > 5
                     ? 'bg-success-500/20 text-success-400'
                     : product.stock > 0
-                    ? 'bg-warning-500/20 text-warning-400'
-                    : 'bg-danger-500/20 text-danger-400'
+                    ? 'bg-warning-500/20 text-warning-400 border border-warning-500/15'
+                    : 'bg-danger-500/20 text-danger-400 font-black'
                 }`}>
-                  {product.stock > 0 ? `Stok: ${product.stock}` : 'Habis'}
+                  <span>{product.stock > 0 ? `Stok: ${product.stock}` : 'Habis'}</span>
+                  {product.stock <= 5 && product.stock > 0 && (
+                    <span className="text-[7px] uppercase tracking-tighter opacity-80 mt-0.5">Stok Rendah</span>
+                  )}
                 </div>
 
                 {/* Emoji Image */}

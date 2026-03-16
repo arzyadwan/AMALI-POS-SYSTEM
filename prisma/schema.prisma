@@ -18,13 +18,25 @@ model Product {
   name       String
   sku        String            @unique
   price      Float
-  costPrice  Float             @default(0) // New: for P&L tracking
+  costPrice  Float             @default(0) // Harga modal & P&L tracking
   stock      Int               @default(0)
   image      String            @default("")
   categoryId Int
   category   Category          @relation(fields: [categoryId], references: [id])
+  supplierId Int?
+  supplier   Supplier?        @relation(fields: [supplierId], references: [id])
   items      TransactionItem[]
   createdAt  DateTime          @default(now())
+}
+
+model Supplier {
+  id        Int       @id @default(autoincrement())
+  name      String
+  phone     String?
+  email     String?
+  address   String?
+  products  Product[]
+  createdAt DateTime  @default(now())
 }
 
 model Customer {
