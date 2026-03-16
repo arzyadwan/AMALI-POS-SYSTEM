@@ -7,6 +7,7 @@ import SimulatorPage from './pages/SimulatorPage'
 import ProductsPage from './pages/ProductsPage'
 import CustomersPage from './pages/CustomersPage'
 import TransactionsPage from './pages/TransactionsPage'
+import CollectionPage from './pages/CollectionPage'
 import UsersPage from './pages/UsersPage'
 
 export default function App() {
@@ -41,6 +42,11 @@ export default function App() {
       <Route path="/products" element={
         <ProtectedRoute requiredRole="ADMIN">
           <Layout><ProductsPage /></Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/collection" element={
+        <ProtectedRoute requiredRole="ADMIN">
+          <Layout><CollectionPage /></Layout>
         </ProtectedRoute>
       } />
       <Route path="/users" element={

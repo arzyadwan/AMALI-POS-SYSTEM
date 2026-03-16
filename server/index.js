@@ -250,6 +250,24 @@ app.post('/api/transactions', async (req, res) => {
         })
       }
 
+      // Auto-generate installment schedule for credit transactions
+      if (type === 'CREDIT') {
+        const startDate = new Date()
+        for (let i = 1; i <= tenor; i++) {
+          const dueDate = new Date(startDate)
+          dueDate.setMonth(dueDate.getMonth() + i)
+          await tx.installment.create({
+            data: {
+              transactionId: trx.id,
+              amount: monthlyPayment,
+              dueDate,
+              monthIndex: i,
+              status: 'PENDING'
+            }
+          })
+        }
+      }
+
       return trx
     })
 
@@ -264,7 +282,7 @@ app.get('/api/installments/:transactionId', async (req, res) => {
   try {
     const installments = await prisma.installment.findMany({
       where: { transactionId: parseInt(req.params.transactionId) },
-      orderBy: { paymentDate: 'asc' }
+      orderBy: { dueDate: 'asc' }
     })
     res.json(installments)
   } catch (err) {
@@ -275,33 +293,122 @@ app.get('/api/installments/:transactionId', async (req, res) => {
 app.post('/api/installments', async (req, res) => {
   try {
     const { transactionId, amount } = req.body
-    
-    const installment = await prisma.installment.create({
+    const txId = parseInt(transactionId)
+    const paidAmount = parseFloat(amount)
+    const now = new Date()
+    const LATE_FEE_PER_MONTH = 50000
+
+    // Find the next PENDING installment for this transaction
+    const nextPending = await prisma.installment.findFirst({
+      where: { transactionId: txId, status: 'PENDING' },
+      orderBy: { dueDate: 'asc' }
+    })
+
+    if (!nextPending) {
+      return res.status(400).json({ error: 'Tidak ada cicilan yang perlu dibayar' })
+    }
+
+    // Calculate late fee if paying after due date
+    let lateFee = 0
+    if (now > new Date(nextPending.dueDate)) {
+      const diffMs = now - new Date(nextPending.dueDate)
+      const diffMonths = Math.ceil(diffMs / (1000 * 60 * 60 * 24 * 30))
+      lateFee = diffMonths * LATE_FEE_PER_MONTH
+    }
+
+    const installment = await prisma.installment.update({
+      where: { id: nextPending.id },
       data: {
-        transactionId: parseInt(transactionId),
-        amount: parseFloat(amount)
+        status: 'PAID',
+        paymentDate: now,
+        amount: paidAmount,
+        lateFee
       }
     })
 
     const allInstallments = await prisma.installment.findMany({
-      where: { transactionId: parseInt(transactionId) }
+      where: { transactionId: txId }
     })
-    const totalPaid = allInstallments.reduce((sum, inst) => sum + inst.amount, 0)
-    
-    const transaction = await prisma.transaction.findUnique({
-      where: { id: parseInt(transactionId) }
-    })
-    
-    if (transaction && totalPaid >= transaction.totalCredit) {
+    const pendingCount = allInstallments.filter(i => i.status === 'PENDING').length
+
+    if (pendingCount === 0) {
       await prisma.transaction.update({
-        where: { id: parseInt(transactionId) },
+        where: { id: txId },
         data: { status: 'PAID_OFF' }
       })
     }
 
-    res.status(201).json(installment)
+    res.status(201).json({ ...installment, lateFee })
   } catch (err) {
     res.status(400).json({ error: err.message })
+  }
+})
+
+// ============ CREDIT COLLECTION ============
+const LATE_FEE_PER_MONTH = 50000
+
+app.get('/api/collection/overdue', async (req, res) => {
+  try {
+    const now = new Date()
+    const overdue = await prisma.installment.findMany({
+      where: {
+        status: 'PENDING',
+        dueDate: { lt: now }
+      },
+      include: {
+        transaction: {
+          include: { customer: true }
+        }
+      },
+      orderBy: { dueDate: 'asc' }
+    })
+
+    const result = overdue.map(inst => {
+      const diffMs = now - new Date(inst.dueDate)
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
+      const diffMonths = Math.ceil(diffMs / (1000 * 60 * 60 * 24 * 30))
+      return {
+        ...inst,
+        overdueDays: diffDays,
+        estimatedLateFee: diffMonths * LATE_FEE_PER_MONTH
+      }
+    })
+
+    res.json(result)
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+app.get('/api/collection/aging', async (req, res) => {
+  try {
+    const now = new Date()
+    const overdue = await prisma.installment.findMany({
+      where: { status: 'PENDING', dueDate: { lt: now } },
+      include: { transaction: { include: { customer: true } } }
+    })
+
+    // Group by customer
+    const byCustomer = {}
+    for (const inst of overdue) {
+      const cid = inst.transaction.customerId || 'unknown'
+      const customerName = inst.transaction.customer?.name || 'Pelanggan Tidak Diketahui'
+      const customerPhone = inst.transaction.customer?.phone || ''
+      if (!byCustomer[cid]) {
+        byCustomer[cid] = { customerId: cid, customerName, customerPhone, current: 0, days1_30: 0, days31_60: 0, days61_90: 0, daysOver90: 0, totalOverdue: 0, installments: [] }
+      }
+      const diffDays = Math.floor((now - new Date(inst.dueDate)) / (1000 * 60 * 60 * 24))
+      byCustomer[cid].totalOverdue += inst.amount
+      byCustomer[cid].installments.push({ ...inst, overdueDays: diffDays })
+      if (diffDays <= 30) byCustomer[cid].days1_30 += inst.amount
+      else if (diffDays <= 60) byCustomer[cid].days31_60 += inst.amount
+      else if (diffDays <= 90) byCustomer[cid].days61_90 += inst.amount
+      else byCustomer[cid].daysOver90 += inst.amount
+    }
+
+    res.json(Object.values(byCustomer))
+  } catch (e) {
+    res.status(500).json({ error: e.message })
   }
 })
 

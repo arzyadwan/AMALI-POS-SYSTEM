@@ -47,6 +47,7 @@ model Transaction {
   monthlyPayment Float             @default(0)
   totalCredit    Float             @default(0)
   status         String            @default("COMPLETED")
+  startDate      DateTime          @default(now())
   items          TransactionItem[]
   installments   Installment[]
   createdAt      DateTime          @default(now())
@@ -57,9 +58,11 @@ model Installment {
   transactionId Int
   transaction   Transaction @relation(fields: [transactionId], references: [id])
   amount        Float
-  paymentDate   DateTime    @default(now())
+  dueDate       DateTime    @default(now())
+  paymentDate   DateTime?
   monthIndex    Int         @default(0)
-  status        String      @default("PAID")
+  status        String      @default("PENDING")
+  lateFee       Float       @default(0)
 }
 
 model TransactionItem {

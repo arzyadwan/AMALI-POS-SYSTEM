@@ -150,6 +150,11 @@ export default function TransactionsPage() {
                       }`}>
                         {tx.type === 'CASH' ? '💵 Cash' : tx.status === 'PAID_OFF' ? `💳 Lunas` : `💳 Kredit ${tx.tenor} bln`}
                       </span>
+                      {tx.type === 'CREDIT' && tx.status === 'ACTIVE' && tx.installments?.some(i => i.status === 'PENDING' && new Date(i.dueDate) < new Date()) && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-600 flex items-center gap-1">
+                          ⚠ Terlambat
+                        </span>
+                      )}
                     </div>
                     <p className="text-[11px] text-slate-500">
                       {tx.customer?.name || 'Pelanggan Umum'} • {formatShortDate(tx.createdAt)}

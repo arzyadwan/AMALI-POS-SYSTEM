@@ -1,5 +1,5 @@
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { ShoppingCart, Calculator, Package, Users, Receipt, Shield, LogOut } from 'lucide-react'
+import { ShoppingCart, Calculator, Package, Users, Receipt, Shield, LogOut, AlertTriangle } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
 export default function Layout({ children }) {
@@ -14,8 +14,9 @@ export default function Layout({ children }) {
     { path: '/transactions', label: 'Transaksi', icon: Receipt },
     // Admin only items
     ...(isAdmin ? [
-      { path: '/products', label: 'Produk', icon: Package },
-      { path: '/users', label: 'Pengguna', icon: Shield },
+      { path: '/products', label: 'Produk', icon: Package, adminTag: true },
+      { path: '/collection', label: 'Piutang', icon: AlertTriangle, adminTag: true },
+      { path: '/users', label: 'Pengguna', icon: Shield, adminTag: true },
     ] : [])
   ]
 
@@ -63,10 +64,7 @@ export default function Layout({ children }) {
                   isActive ? 'text-primary-600' : 'text-slate-400 group-hover:text-slate-600'
                 }`} />
                 <span>{item.label}</span>
-                {item.path === '/users' && (
-                  <span className="ml-auto text-[9px] font-bold bg-red-100 text-red-600 px-1.5 py-0.5 rounded-md">ADMIN</span>
-                )}
-                {item.path === '/products' && (
+                {item.adminTag && (
                   <span className="ml-auto text-[9px] font-bold bg-red-100 text-red-600 px-1.5 py-0.5 rounded-md">ADMIN</span>
                 )}
               </NavLink>
