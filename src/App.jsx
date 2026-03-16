@@ -8,6 +8,8 @@ import ProductsPage from './pages/ProductsPage'
 import CustomersPage from './pages/CustomersPage'
 import TransactionsPage from './pages/TransactionsPage'
 import CollectionPage from './pages/CollectionPage'
+import AnalyticsPage from './pages/AnalyticsPage'
+import SuppliersPage from './pages/SuppliersPage'
 import UsersPage from './pages/UsersPage'
 
 export default function App() {
@@ -47,6 +49,16 @@ export default function App() {
       <Route path="/collection" element={
         <ProtectedRoute requiredRole="ADMIN">
           <Layout><CollectionPage /></Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/analytics" element={
+        <ProtectedRoute requiredRole="ADMIN">
+          <Layout><AnalyticsPage /></Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/suppliers" element={
+        <ProtectedRoute requiredRole="ADMIN">
+          <Layout><SuppliersPage /></Layout>
         </ProtectedRoute>
       } />
       <Route path="/users" element={

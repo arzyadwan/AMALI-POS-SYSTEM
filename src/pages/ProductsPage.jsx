@@ -1,19 +1,21 @@
 import { useState, useEffect } from 'react'
-import { Package, Plus, Search, Edit3, Trash2, X, Check, AlertCircle } from 'lucide-react'
+import { Package, Plus, Search, Edit3, Trash2, X, Check, AlertCircle, Truck } from 'lucide-react'
 import { formatRupiah } from '../utils/formatCurrency'
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
+  const [suppliers, setSuppliers] = useState([])
   const [search, setSearch] = useState('')
   const [filterCategory, setFilterCategory] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [editProduct, setEditProduct] = useState(null)
-  const [form, setForm] = useState({ name: '', sku: '', price: 0, stock: 0, image: '', categoryId: '' })
+  const [form, setForm] = useState({ name: '', sku: '', price: 0, costPrice: 0, stock: 0, image: '', categoryId: '', supplierId: '' })
 
   useEffect(() => {
     fetchProducts()
     fetchCategories()
+    fetchSuppliers()
   }, [])
 
   useEffect(() => {
@@ -33,9 +35,18 @@ export default function ProductsPage() {
     setCategories(await res.json())
   }
 
+  const fetchSuppliers = async () => {
+    const res = await fetch('/api/suppliers')
+    setSuppliers(await res.json())
+  }
+
   const openAdd = () => {
     setEditProduct(null)
-    setForm({ name: '', sku: '', price: 0, stock: 0, image: '', categoryId: categories[0]?.id || '' })
+    setForm({ 
+      name: '', sku: '', price: 0, costPrice: 0, stock: 0, image: '', 
+      categoryId: categories[0]?.id || '',
+      supplierId: ''
+    })
     setShowModal(true)
   }
 
@@ -45,15 +56,24 @@ export default function ProductsPage() {
       name: product.name,
       sku: product.sku,
       price: product.price,
+      costPrice: product.costPrice || 0,
       stock: product.stock,
       image: product.image,
-      categoryId: product.categoryId
+      categoryId: product.categoryId,
+      supplierId: product.supplierId || ''
     })
     setShowModal(true)
   }
 
   const handleSubmit = async () => {
-    const body = { ...form, price: parseFloat(form.price), stock: parseInt(form.stock), categoryId: parseInt(form.categoryId) }
+    const body = { 
+      ...form, 
+      price: parseFloat(form.price), 
+      costPrice: parseFloat(form.costPrice),
+      stock: parseInt(form.stock), 
+      categoryId: parseInt(form.categoryId),
+      supplierId: form.supplierId ? parseInt(form.supplierId) : null
+    }
     if (editProduct) {
       await fetch(`/api/products/${editProduct.id}`, {
         method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
@@ -141,19 +161,34 @@ export default function ProductsPage() {
                     </td>
                     <td className="py-3 px-4 text-slate-500 font-mono text-xs">{product.sku}</td>
                     <td className="py-3 px-4">
-                      <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-xs">
-                        {product.category?.name}
-                      </span>
+                      <div className="flex flex-col">
+                        <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] w-fit font-bold">
+                          {product.category?.name}
+                        </span>
+                        {product.supplier && (
+                          <span className="text-[10px] text-slate-400 mt-1 flex items-center gap-1">
+                            <Truck className="w-3 h-3" /> {product.supplier.name}
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="py-3 px-4 text-right text-primary-400 font-semibold">{formatRupiah(product.price)}</td>
                     <td className="py-3 px-4 text-center">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
-                        product.stock > 5 ? 'bg-success-500/15 text-success-400' :
-                        product.stock > 0 ? 'bg-warning-500/15 text-warning-400' :
-                        'bg-danger-500/15 text-danger-400'
-                      }`}>
-                        {product.stock}
-                      </span>
+                       <div className="flex flex-col items-center gap-1">
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                          product.stock > 5 ? 'bg-success-500/15 text-success-400' :
+                          product.stock > 0 ? 'bg-warning-500/15 text-warning-400' :
+                          'bg-danger-500/15 text-danger-400'
+                        }`}>
+                          {product.stock}
+                        </span>
+                        {product.stock <= 5 && product.stock > 0 && (
+                          <span className="text-[9px] font-black text-warning-500 uppercase tracking-tighter">Stok Rendah</span>
+                        )}
+                        {product.stock === 0 && (
+                          <span className="text-[9px] font-black text-danger-500 uppercase tracking-tighter">Habis</span>
+                        )}
+                       </div>
                     </td>
                     <td className="py-3 px-4 text-center">
                       <div className="flex items-center justify-center gap-1.5">
@@ -202,22 +237,39 @@ export default function ProductsPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block mb-1">Harga</label>
+                    <label className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block mb-1">Harga Jual</label>
                     <input type="number" value={form.price} onChange={e => setForm({...form, price: e.target.value})}
                       className="input-modern" />
                   </div>
+                  <div>
+                    <label className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block mb-1">Harga Modal</label>
+                    <input type="number" value={form.costPrice} onChange={e => setForm({...form, costPrice: e.target.value})}
+                      className="input-modern" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block mb-1">Stok</label>
                     <input type="number" value={form.stock} onChange={e => setForm({...form, stock: e.target.value})}
                       className="input-modern" />
                   </div>
+                  <div>
+                    <label className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block mb-1">Kategori</label>
+                    <select value={form.categoryId} onChange={e => setForm({...form, categoryId: e.target.value})}
+                      className="input-modern">
+                      {categories.map(cat => (
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
                 <div>
-                  <label className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block mb-1">Kategori</label>
-                  <select value={form.categoryId} onChange={e => setForm({...form, categoryId: e.target.value})}
+                  <label className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block mb-1">Supplier (Opsional)</label>
+                  <select value={form.supplierId} onChange={e => setForm({...form, supplierId: e.target.value})}
                     className="input-modern">
-                    {categories.map(cat => (
-                      <option key={cat.id} value={cat.id}>{cat.name}</option>
+                    <option value="">Tanpa Supplier</option>
+                    {suppliers.map(sup => (
+                      <option key={sup.id} value={sup.id}>{sup.name}</option>
                     ))}
                   </select>
                 </div>

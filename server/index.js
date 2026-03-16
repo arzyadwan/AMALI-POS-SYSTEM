@@ -71,7 +71,7 @@ app.get('/api/products', async (req, res) => {
   }
   const products = await prisma.product.findMany({
     where,
-    include: { category: true },
+    include: { category: true, supplier: true },
     orderBy: { name: 'asc' }
   })
   res.json(products)
@@ -80,7 +80,7 @@ app.get('/api/products', async (req, res) => {
 app.get('/api/products/:id', async (req, res) => {
   const product = await prisma.product.findUnique({
     where: { id: parseInt(req.params.id) },
-    include: { category: true }
+    include: { category: true, supplier: true }
   })
   if (!product) return res.status(404).json({ error: 'Product not found' })
   res.json(product)
@@ -90,7 +90,7 @@ app.post('/api/products', async (req, res) => {
   try {
     const product = await prisma.product.create({
       data: req.body,
-      include: { category: true }
+      include: { category: true, supplier: true }
     })
     res.status(201).json(product)
   } catch (err) {
@@ -103,7 +103,7 @@ app.put('/api/products/:id', async (req, res) => {
     const product = await prisma.product.update({
       where: { id: parseInt(req.params.id) },
       data: req.body,
-      include: { category: true }
+      include: { category: true, supplier: true }
     })
     res.json(product)
   } catch (err) {
@@ -155,6 +155,58 @@ app.put('/api/customers/:id', async (req, res) => {
       data: req.body
     })
     res.json(customer)
+  } catch (err) {
+    res.status(400).json({ error: err.message })
+  }
+})
+
+app.delete('/api/customers/:id', async (req, res) => {
+  try {
+    await prisma.customer.delete({ where: { id: parseInt(req.params.id) } })
+    res.json({ message: 'Customer deleted' })
+  } catch (err) {
+    res.status(400).json({ error: err.message })
+  }
+})
+
+// ============ SUPPLIERS ============
+app.get('/api/suppliers', async (req, res) => {
+  try {
+    const suppliers = await prisma.supplier.findMany({
+      include: { _count: { select: { products: true } } },
+      orderBy: { name: 'asc' }
+    })
+    res.json(suppliers)
+  } catch (err) {
+    res.status(400).json({ error: err.message })
+  }
+})
+
+app.post('/api/suppliers', async (req, res) => {
+  try {
+    const supplier = await prisma.supplier.create({ data: req.body })
+    res.status(201).json(supplier)
+  } catch (err) {
+    res.status(400).json({ error: err.message })
+  }
+})
+
+app.put('/api/suppliers/:id', async (req, res) => {
+  try {
+    const supplier = await prisma.supplier.update({
+      where: { id: parseInt(req.params.id) },
+      data: req.body
+    })
+    res.json(supplier)
+  } catch (err) {
+    res.status(400).json({ error: err.message })
+  }
+})
+
+app.delete('/api/suppliers/:id', async (req, res) => {
+  try {
+    await prisma.supplier.delete({ where: { id: parseInt(req.params.id) } })
+    res.json({ message: 'Supplier deleted' })
   } catch (err) {
     res.status(400).json({ error: err.message })
   }
