@@ -4,6 +4,8 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { PrismaClient } from '@prisma/client'
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcryptjs'
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -14,6 +16,28 @@ const PORT = 3002
 
 app.use(cors())
 app.use(express.json())
+
+const JWT_SECRET = process.env.JWT_SECRET || 'amali-kredit-secret-key-2024'
+
+// ============ AUTH MIDDLEWARE ============
+function verifyToken(req, res, next) {
+  const token = req.headers['authorization']?.split(' ')[1]
+  if (!token) return res.status(401).json({ error: 'Token tidak ditemukan' })
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET)
+    req.user = decoded
+    next()
+  } catch {
+    return res.status(401).json({ error: 'Token tidak valid atau sudah kadaluarsa' })
+  }
+}
+
+function isAdmin(req, res, next) {
+  if (req.user?.role !== 'ADMIN') {
+    return res.status(403).json({ error: 'Akses ditolak. Hanya Admin yang diizinkan.' })
+  }
+  next()
+}
 
 const CREDIT_FACTORS = {
   3: 0.368,
@@ -334,6 +358,77 @@ app.get('/api/stats', async (req, res) => {
     cashTransactions,
     creditTransactions
   })
+})
+
+// ============ AUTH ROUTES ============
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { username, password } = req.body
+    if (!username || !password) return res.status(400).json({ error: 'Username dan password wajib diisi' })
+    const user = await prisma.user.findUnique({ where: { username } })
+    if (!user) return res.status(401).json({ error: 'Username atau password salah' })
+    const valid = await bcrypt.compare(password, user.password)
+    if (!valid) return res.status(401).json({ error: 'Username atau password salah' })
+    const token = jwt.sign({ id: user.id, username: user.username, name: user.name, role: user.role }, JWT_SECRET, { expiresIn: '8h' })
+    res.json({ token, user: { id: user.id, username: user.username, name: user.name, role: user.role } })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+app.post('/api/auth/register', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const { username, password, name, role } = req.body
+    if (!username || !password) return res.status(400).json({ error: 'Username dan password wajib diisi' })
+    const hashed = await bcrypt.hash(password, 10)
+    const user = await prisma.user.create({
+      data: { username, password: hashed, name: name || '', role: role || 'CASHIER' }
+    })
+    res.json({ id: user.id, username: user.username, name: user.name, role: user.role })
+  } catch (e) {
+    if (e.code === 'P2002') return res.status(409).json({ error: 'Username sudah terdaftar' })
+    res.status(500).json({ error: e.message })
+  }
+})
+
+app.get('/api/auth/users', verifyToken, isAdmin, async (req, res) => {
+  const users = await prisma.user.findMany({ select: { id: true, username: true, name: true, role: true, createdAt: true } })
+  res.json(users)
+})
+
+app.delete('/api/auth/users/:id', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const id = parseInt(req.params.id)
+    if (id === req.user.id) return res.status(400).json({ error: 'Tidak bisa menghapus akun sendiri' })
+    await prisma.user.delete({ where: { id } })
+    res.json({ success: true })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// Check if first-time setup is needed
+app.get('/api/auth/check-setup', async (req, res) => {
+  const count = await prisma.user.count()
+  res.json({ needsSetup: count === 0 })
+})
+
+// First-time admin setup (only works if NO users exist)
+app.post('/api/auth/setup', async (req, res) => {
+  try {
+    const count = await prisma.user.count()
+    if (count > 0) return res.status(400).json({ error: 'Setup sudah pernah dilakukan' })
+    const { username, password, name } = req.body
+    if (!username || !password) return res.status(400).json({ error: 'Username dan password wajib diisi' })
+    const hashed = await bcrypt.hash(password, 10)
+    const user = await prisma.user.create({
+      data: { username, password: hashed, name: name || 'Administrator', role: 'ADMIN' }
+    })
+    const token = jwt.sign({ id: user.id, username: user.username, name: user.name, role: user.role }, JWT_SECRET, { expiresIn: '8h' })
+    res.json({ token, user: { id: user.id, username: user.username, name: user.name, role: user.role } })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
 })
 
 app.listen(PORT, () => {

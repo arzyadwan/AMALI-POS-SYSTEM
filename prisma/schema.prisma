@@ -71,3 +71,12 @@ model TransactionItem {
   quantity      Int
   price         Float
 }
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  role      String   @default("CASHIER")
+  name      String   @default("")
+  createdAt DateTime @default(now())
+}
