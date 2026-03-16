@@ -1,5 +1,5 @@
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { ShoppingCart, Calculator, Package, Users, Receipt, Shield, LogOut, AlertTriangle } from 'lucide-react'
+import { ShoppingCart, Calculator, Package, Users, Receipt, Shield, LogOut, AlertTriangle, BarChart3 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
 export default function Layout({ children }) {
@@ -16,6 +16,7 @@ export default function Layout({ children }) {
     ...(isAdmin ? [
       { path: '/products', label: 'Produk', icon: Package, adminTag: true },
       { path: '/collection', label: 'Piutang', icon: AlertTriangle, adminTag: true },
+      { path: '/analytics', label: 'Analitik', icon: BarChart3, adminTag: true },
       { path: '/users', label: 'Pengguna', icon: Shield, adminTag: true },
     ] : [])
   ]

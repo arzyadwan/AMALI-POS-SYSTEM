@@ -538,6 +538,107 @@ app.post('/api/auth/setup', async (req, res) => {
   }
 })
 
+// ============ ANALYTICS ============
+app.get('/api/stats/summary', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const totalTransactions = await prisma.transaction.count()
+    const transactions = await prisma.transaction.findMany({
+      include: { items: { include: { product: true } } }
+    })
+    
+    const totalRevenue = transactions.reduce((sum, tx) => sum + tx.totalPrice, 0)
+    
+    // Calculate profit
+    let totalProfit = 0
+    transactions.forEach(tx => {
+      let txCost = 0
+      tx.items.forEach(item => {
+        txCost += (item.product.costPrice || 0) * item.quantity
+      })
+      totalProfit += (tx.totalPrice - txCost)
+    })
+    
+    const totalCustomers = await prisma.customer.count()
+    const activeCreditCount = await prisma.transaction.count({ where: { type: 'CREDIT', status: 'ACTIVE' } })
+    
+    res.json({
+      totalRevenue,
+      totalProfit,
+      totalTransactions,
+      totalCustomers,
+      activeCreditCount
+    })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+app.get('/api/stats/sales-trend', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const days = 30 // Last 30 days
+    const startDate = new Date()
+    startDate.setDate(startDate.getDate() - days)
+    
+    const transactions = await prisma.transaction.findMany({
+      where: { createdAt: { gte: startDate } },
+      include: { items: { include: { product: true } } },
+      orderBy: { createdAt: 'asc' }
+    })
+    
+    // Group by date
+    const trend = {}
+    for (let i = 0; i <= days; i++) {
+        const d = new Date()
+        d.setDate(d.getDate() - i)
+        const dateStr = d.toISOString().split('T')[0]
+        trend[dateStr] = { date: dateStr, revenue: 0, profit: 0, count: 0 }
+    }
+    
+    transactions.forEach(tx => {
+      const dateStr = tx.createdAt.toISOString().split('T')[0]
+      if (trend[dateStr]) {
+        trend[dateStr].revenue += tx.totalPrice
+        trend[dateStr].count += 1
+        
+        let txCost = 0
+        tx.items.forEach(item => {
+          txCost += (item.product.costPrice || 0) * item.quantity
+        })
+        trend[dateStr].profit += (tx.totalPrice - txCost)
+      }
+    })
+    
+    res.json(Object.values(trend).sort((a,b) => a.date.localeCompare(b.date)))
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+app.get('/api/stats/top-products', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const items = await prisma.transactionItem.findMany({
+      include: { product: true }
+    })
+    
+    const productSales = {}
+    items.forEach(item => {
+      if (!productSales[item.productId]) {
+        productSales[item.productId] = { name: item.product.name, quantity: 0, revenue: 0 }
+      }
+      productSales[item.productId].quantity += item.quantity
+      productSales[item.productId].revenue += item.price * item.quantity
+    })
+    
+    const topProducts = Object.values(productSales)
+      .sort((a, b) => b.quantity - a.quantity)
+      .slice(0, 5)
+      
+    res.json(topProducts)
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
 app.listen(PORT, () => {
   console.log(`🚀 AMALI KREDIT API running on http://localhost:${PORT}`)
 })

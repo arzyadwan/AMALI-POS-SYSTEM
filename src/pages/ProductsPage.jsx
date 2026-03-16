@@ -9,7 +9,7 @@ export default function ProductsPage() {
   const [filterCategory, setFilterCategory] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [editProduct, setEditProduct] = useState(null)
-  const [form, setForm] = useState({ name: '', sku: '', price: 0, stock: 0, image: '', categoryId: '' })
+  const [form, setForm] = useState({ name: '', sku: '', price: 0, costPrice: 0, stock: 0, image: '', categoryId: '' })
 
   useEffect(() => {
     fetchProducts()
@@ -35,7 +35,7 @@ export default function ProductsPage() {
 
   const openAdd = () => {
     setEditProduct(null)
-    setForm({ name: '', sku: '', price: 0, stock: 0, image: '', categoryId: categories[0]?.id || '' })
+    setForm({ name: '', sku: '', price: 0, costPrice: 0, stock: 0, image: '', categoryId: categories[0]?.id || '' })
     setShowModal(true)
   }
 
@@ -45,6 +45,7 @@ export default function ProductsPage() {
       name: product.name,
       sku: product.sku,
       price: product.price,
+      costPrice: product.costPrice || 0,
       stock: product.stock,
       image: product.image,
       categoryId: product.categoryId
@@ -53,7 +54,13 @@ export default function ProductsPage() {
   }
 
   const handleSubmit = async () => {
-    const body = { ...form, price: parseFloat(form.price), stock: parseInt(form.stock), categoryId: parseInt(form.categoryId) }
+    const body = { 
+      ...form, 
+      price: parseFloat(form.price), 
+      costPrice: parseFloat(form.costPrice),
+      stock: parseInt(form.stock), 
+      categoryId: parseInt(form.categoryId) 
+    }
     if (editProduct) {
       await fetch(`/api/products/${editProduct.id}`, {
         method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
@@ -200,10 +207,14 @@ export default function ProductsPage() {
                       className="input-modern" />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block mb-1">Harga</label>
+                    <label className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block mb-1">Harga Jual</label>
                     <input type="number" value={form.price} onChange={e => setForm({...form, price: e.target.value})}
+                      className="input-modern" />
+                  </div>
+                  <div>
+                    <label className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block mb-1">Harga Modal</label>
+                    <input type="number" value={form.costPrice} onChange={e => setForm({...form, costPrice: e.target.value})}
                       className="input-modern" />
                   </div>
                   <div>
@@ -211,7 +222,6 @@ export default function ProductsPage() {
                     <input type="number" value={form.stock} onChange={e => setForm({...form, stock: e.target.value})}
                       className="input-modern" />
                   </div>
-                </div>
                 <div>
                   <label className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block mb-1">Kategori</label>
                   <select value={form.categoryId} onChange={e => setForm({...form, categoryId: e.target.value})}

@@ -18,6 +18,7 @@ model Product {
   name       String
   sku        String            @unique
   price      Float
+  costPrice  Float             @default(0) // New: for P&L tracking
   stock      Int               @default(0)
   image      String            @default("")
   categoryId Int
