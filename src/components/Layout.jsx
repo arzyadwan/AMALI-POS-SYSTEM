@@ -1,16 +1,28 @@
-import { NavLink, useLocation } from 'react-router-dom'
-import { ShoppingCart, Calculator, Package, Users, Receipt, Sparkles } from 'lucide-react'
-
-const navItems = [
-  { path: '/', label: 'Kasir POS', icon: ShoppingCart },
-  { path: '/simulator', label: 'Simulator Kredit', icon: Calculator },
-  { path: '/products', label: 'Produk', icon: Package },
-  { path: '/customers', label: 'Pelanggan', icon: Users },
-  { path: '/transactions', label: 'Transaksi', icon: Receipt },
-]
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { ShoppingCart, Calculator, Package, Users, Receipt, Shield, LogOut } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 
 export default function Layout({ children }) {
   const location = useLocation()
+  const navigate = useNavigate()
+  const { user, logout, isAdmin } = useAuth()
+
+  const navItems = [
+    { path: '/', label: 'Kasir POS', icon: ShoppingCart },
+    { path: '/simulator', label: 'Simulator Kredit', icon: Calculator },
+    { path: '/customers', label: 'Pelanggan', icon: Users },
+    { path: '/transactions', label: 'Transaksi', icon: Receipt },
+    // Admin only items
+    ...(isAdmin ? [
+      { path: '/products', label: 'Produk', icon: Package },
+      { path: '/users', label: 'Pengguna', icon: Shield },
+    ] : [])
+  ]
+
+  function handleLogout() {
+    logout()
+    navigate('/login')
+  }
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50 text-slate-900">
@@ -51,17 +63,44 @@ export default function Layout({ children }) {
                   isActive ? 'text-primary-600' : 'text-slate-400 group-hover:text-slate-600'
                 }`} />
                 <span>{item.label}</span>
+                {item.path === '/users' && (
+                  <span className="ml-auto text-[9px] font-bold bg-red-100 text-red-600 px-1.5 py-0.5 rounded-md">ADMIN</span>
+                )}
+                {item.path === '/products' && (
+                  <span className="ml-auto text-[9px] font-bold bg-red-100 text-red-600 px-1.5 py-0.5 rounded-md">ADMIN</span>
+                )}
               </NavLink>
             )
           })}
         </nav>
 
-        {/* Footer */}
-        <div className="p-5 border-t border-slate-100">
-          <div className="clean-card p-3 rounded-xl bg-slate-50 text-center border-slate-100">
-            <p className="text-xs text-slate-500 font-medium">
-              <span className="text-primary-600 font-bold block mb-0.5">AMALI KREDIT v1.0</span>
-              &copy; 2026 Hak Cipta
+        {/* User Info & Logout */}
+        <div className="p-4 border-t border-slate-100 space-y-3">
+          {user && (
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${
+                isAdmin ? 'bg-red-100 text-red-600' : 'bg-emerald-100 text-emerald-700'
+              }`}>
+                {(user.name || user.username).charAt(0).toUpperCase()}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-bold text-slate-800 truncate">{user.name || user.username}</p>
+                <p className={`text-[10px] font-semibold ${isAdmin ? 'text-red-500' : 'text-emerald-600'}`}>
+                  {isAdmin ? '🛡️ Admin' : '💼 Kasir'}
+                </p>
+              </div>
+              <button
+                onClick={handleLogout}
+                title="Keluar"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
+          <div className="text-center">
+            <p className="text-[10px] text-slate-400">
+              <span className="text-primary-500 font-bold">AMALI KREDIT v2.0</span> &copy; 2026
             </p>
           </div>
         </div>
