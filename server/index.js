@@ -39,6 +39,35 @@ function isAdmin(req, res, next) {
   next()
 }
 
+// ============ BACKUP SYSTEM ============
+app.get('/api/backup/download', verifyToken, isAdmin, (req, res) => {
+  console.log('--- Backup download request received ---')
+  const dbPath = path.resolve(__dirname, '..', 'prisma', 'dev.db')
+  console.log('Database path:', dbPath)
+  
+  if (!fs.existsSync(dbPath)) {
+    console.error('Database file not found at:', dbPath)
+    return res.status(404).json({ error: 'File database tidak ditemukan' })
+  }
+
+  const filename = `backup-${new Date().toISOString().split('T')[0]}.db`
+  console.log('Streaming backup file:', filename)
+  
+  res.download(dbPath, filename, (err) => {
+    if (err) {
+      console.error('Backup download error:', err)
+      if (!res.headersSent) {
+        res.status(500).json({ error: 'Gagal mengunduh cadangan database' })
+      }
+    } else {
+      console.log('Backup download successful')
+    }
+  })
+})
+
+
+
+
 const CREDIT_FACTORS = {
   3: 0.368,
   6: 0.208,

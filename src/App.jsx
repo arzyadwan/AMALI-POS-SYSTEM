@@ -11,6 +11,7 @@ import CollectionPage from './pages/CollectionPage'
 import AnalyticsPage from './pages/AnalyticsPage'
 import SuppliersPage from './pages/SuppliersPage'
 import UsersPage from './pages/UsersPage'
+import SettingsPage from './pages/SettingsPage'
 
 export default function App() {
   return (
@@ -66,6 +67,12 @@ export default function App() {
           <Layout><UsersPage /></Layout>
         </ProtectedRoute>
       } />
+      <Route path="/settings" element={
+        <ProtectedRoute requiredRole="ADMIN">
+          <Layout><SettingsPage /></Layout>
+        </ProtectedRoute>
+      } />
+
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
