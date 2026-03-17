@@ -1,5 +1,5 @@
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { ShoppingCart, Calculator, Package, Users, Receipt, Shield, LogOut, AlertTriangle, BarChart3, Truck } from 'lucide-react'
+import { ShoppingCart, Calculator, Package, Users, Receipt, Shield, LogOut, AlertTriangle, BarChart3, Truck, Settings } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
 export default function Layout({ children }) {
@@ -19,8 +19,10 @@ export default function Layout({ children }) {
       { path: '/analytics', label: 'Analitik', icon: BarChart3, adminTag: true },
       { path: '/suppliers', label: 'Supplier', icon: Truck, adminTag: true },
       { path: '/users', label: 'Pengguna', icon: Shield, adminTag: true },
+      { path: '/settings', label: 'Pengaturan', icon: Settings, adminTag: true },
     ] : [])
   ]
+
 
   function handleLogout() {
     logout()
