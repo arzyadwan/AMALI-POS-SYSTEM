@@ -113,7 +113,7 @@ export default function ProductsPage() {
         </div>
 
         {/* Search & Filter */}
-        <div className="flex gap-3 mb-5 animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
+        <div className="flex flex-col sm:flex-row gap-3 mb-5 animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
@@ -138,7 +138,7 @@ export default function ProductsPage() {
 
         {/* Products Table */}
         <div className="clean-card shadow-sm rounded-2xl overflow-hidden animate-fadeInUp" style={{ animationDelay: '0.15s' }}>
-          <div className="overflow-x-auto">
+          <div className="table-responsive">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-slate-200 bg-slate-50/50">

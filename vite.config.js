@@ -8,6 +8,7 @@ export default defineConfig({
     react(),
   ],
   server: {
+    host: true,
     proxy: {
       '/api': 'http://localhost:3002'
     }

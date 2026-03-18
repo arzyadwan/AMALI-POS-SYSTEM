@@ -23,6 +23,7 @@ export default function POSPage() {
   const [showCheckoutModal, setShowCheckoutModal] = useState(false)
   const [checkoutSuccess, setCheckoutSuccess] = useState(false)
   const [lastTransaction, setLastTransaction] = useState(null)
+  const [activeTab, setActiveTab] = useState('products') // 'products' | 'cart'
 
   useEffect(() => {
     fetchProducts()
@@ -161,9 +162,34 @@ export default function POSPage() {
 
   return (
     <>
-      <div className="flex h-full">
+      <div className="flex flex-col lg:flex-row h-full overflow-hidden">
+        {/* Mobile Tab Switcher */}
+        <div className="lg:hidden flex border-b border-slate-200 bg-white sticky top-0 z-20">
+          <button 
+            onClick={() => setActiveTab('products')}
+            className={`flex-1 py-3 text-sm font-bold transition-all ${
+              activeTab === 'products' ? 'text-primary-600 border-b-2 border-primary-500 bg-primary-50/30' : 'text-slate-400'
+            }`}
+          >
+            Daftar Produk
+          </button>
+          <button 
+            onClick={() => setActiveTab('cart')}
+            className={`flex-1 py-3 text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+              activeTab === 'cart' ? 'text-primary-600 border-b-2 border-primary-500 bg-primary-50/30' : 'text-slate-400'
+            }`}
+          >
+            Keranjang 
+            {cart.length > 0 && (
+              <span className="w-5 h-5 flex items-center justify-center rounded-full bg-primary-500 text-white text-[10px] animate-pulse">
+                {cart.reduce((s, i) => s + i.quantity, 0)}
+              </span>
+            )}
+          </button>
+        </div>
+
       {/* Products Panel */}
-      <div className="flex-1 flex flex-col overflow-hidden p-6">
+      <div className={`flex-1 flex flex-col overflow-hidden p-4 lg:p-6 ${activeTab !== 'products' ? 'hidden lg:flex' : 'flex'}`}>
         {/* Header */}
         <div className="mb-6 animate-fadeInUp">
           <h2 className="text-2xl font-bold text-slate-900 mb-1">Kasir <span className="text-primary-600">POS</span></h2>
@@ -275,7 +301,11 @@ export default function POSPage() {
       </div>
 
       {/* Cart / Receipt Sidebar */}
-      <div className="w-[380px] flex-shrink-0 bg-white border-l border-slate-200 flex flex-col z-10 shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.05)]">
+      <div className={`
+        w-full lg:w-[380px] flex-shrink-0 bg-white border-l border-slate-200 flex flex-col z-10 
+        shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.05)]
+        ${activeTab !== 'cart' ? 'hidden lg:flex' : 'flex'}
+      `}>
         {/* Cart Header */}
         <div className="p-4 border-b border-slate-200 bg-slate-50/50">
           <div className="flex items-center justify-between">

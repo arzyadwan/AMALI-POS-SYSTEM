@@ -19,7 +19,7 @@ export default function SuppliersPage() {
 
   const fetchSuppliers = async () => {
     try {
-      const res = await fetch('http://localhost:3002/api/suppliers', { headers: authHeaders })
+      const res = await fetch('/api/suppliers', { headers: authHeaders })
       const data = await res.json()
       setSuppliers(data)
     } catch (e) {
@@ -47,8 +47,8 @@ export default function SuppliersPage() {
   const handleSubmit = async () => {
     try {
       const url = editSupplier 
-        ? `http://localhost:3002/api/suppliers/${editSupplier.id}` 
-        : 'http://localhost:3002/api/suppliers'
+        ? `/api/suppliers/${editSupplier.id}` 
+        : '/api/suppliers'
       
       const method = editSupplier ? 'PUT' : 'POST'
 

@@ -24,7 +24,7 @@ export default function SimulatorPage() {
   const earlyPayoff = calculateEarlyPayoff(principal, selectedTenor, targetTenor, paidMonths)
 
   return (
-    <div className="h-full overflow-y-auto p-8 bg-slate-50">
+    <div className="h-full overflow-y-auto p-4 lg:p-8 bg-slate-50">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8 animate-fadeInUp">
@@ -186,24 +186,24 @@ export default function SimulatorPage() {
           {/* Results Panel */}
           <div className="lg:col-span-2 space-y-4">
             {/* Summary Cards */}
-            <div className="grid grid-cols-3 gap-4 animate-fadeInUp" style={{ animationDelay: '0.15s' }}>
-              <div className="clean-card p-5 text-center shadow-sm">
-                <p className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider mb-2">Cicilan / Bulan</p>
-                <p className="text-2xl font-bold text-primary-600">{formatRupiah(monthly)}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 animate-fadeInUp" style={{ animationDelay: '0.15s' }}>
+              <div className="clean-card p-4 lg:p-5 text-center shadow-sm">
+                <p className="text-[10px] lg:text-[11px] text-slate-500 font-semibold uppercase tracking-wider mb-2">Cicilan / Bulan</p>
+                <p className="text-xl lg:text-2xl font-bold text-primary-600">{formatRupiah(monthly)}</p>
                 <p className="text-[10px] text-slate-400 mt-1">× {selectedTenor} bulan</p>
               </div>
-              <div className="clean-card p-5 text-center shadow-sm">
-                <p className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider mb-2">Total Pembayaran</p>
-                <p className="text-2xl font-bold text-warning-500">{formatRupiah(grandTotal)}</p>
-                <p className="text-[10px] text-slate-400 mt-1 leading-tight">
-                  {formatRupiah(totalCredit)} (Kredit) + {formatRupiah(dp)} (DP) + {formatRupiah(ADMIN_FEE)} (Admin)
+              <div className="clean-card p-4 lg:p-5 text-center shadow-sm">
+                <p className="text-[10px] lg:text-[11px] text-slate-500 font-semibold uppercase tracking-wider mb-2">Total Pembayaran</p>
+                <p className="text-xl lg:text-2xl font-bold text-warning-500">{formatRupiah(grandTotal)}</p>
+                <p className="text-[9px] lg:text-[10px] text-slate-400 mt-1 leading-tight">
+                  {formatRupiah(totalCredit)} (K) + {formatRupiah(dp)} (D) + {formatRupiah(ADMIN_FEE)} (A)
                 </p>
               </div>
-              <div className="clean-card p-5 text-center shadow-sm">
-                <p className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider mb-2">Margin Keuntungan</p>
-                <p className="text-2xl font-bold text-emerald-600">{formatRupiah(margin)}</p>
-                <p className="text-[10px] text-slate-400 mt-1">
-                  {principal > 0 ? `${((margin / principal) * 100).toFixed(1)}% dari harga pokok` : '—'}
+              <div className="clean-card p-4 lg:p-5 text-center shadow-sm">
+                <p className="text-[10px] lg:text-[11px] text-slate-500 font-semibold uppercase tracking-wider mb-2">Margin Keuntungan</p>
+                <p className="text-xl lg:text-2xl font-bold text-emerald-600">{formatRupiah(margin)}</p>
+                <p className="text-[9px] lg:text-[10px] text-slate-400 mt-1">
+                  {principal > 0 ? `${((margin / principal) * 100).toFixed(1)}%` : '—'}
                 </p>
               </div>
             </div>
@@ -214,7 +214,7 @@ export default function SimulatorPage() {
                 <TrendingUp className="w-4 h-4 text-primary-500" />
                 Perbandingan Semua Tenor
               </h3>
-              <div className="overflow-x-auto">
+              <div className="table-responsive">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-slate-200">

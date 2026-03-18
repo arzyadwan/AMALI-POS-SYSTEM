@@ -17,7 +17,7 @@ export default function LoginPage() {
 
   // Check if setup is needed (no users yet)
   useEffect(() => {
-    fetch('http://localhost:3002/api/auth/check-setup')
+    fetch('/api/auth/check-setup')
       .then(r => r.json())
       .then(d => setNeedsSetup(d.needsSetup))
       .catch(() => setNeedsSetup(false))
@@ -28,7 +28,7 @@ export default function LoginPage() {
     setError('')
     setIsLoading(true)
     try {
-      const res = await fetch('http://localhost:3002/api/auth/setup', {
+      const res = await fetch('/api/auth/setup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password, name: setupName })
@@ -49,7 +49,7 @@ export default function LoginPage() {
     setError('')
     setIsLoading(true)
     try {
-      const res = await fetch('http://localhost:3002/api/auth/login', {
+      const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })

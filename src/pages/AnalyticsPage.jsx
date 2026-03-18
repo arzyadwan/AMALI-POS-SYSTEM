@@ -26,9 +26,9 @@ export default function AnalyticsPage() {
       setLoading(true)
       try {
         const [summaryRes, trendRes, topRes] = await Promise.all([
-          fetch('http://localhost:3002/api/stats/summary', { headers: authHeaders }),
-          fetch('http://localhost:3002/api/stats/sales-trend', { headers: authHeaders }),
-          fetch('http://localhost:3002/api/stats/top-products', { headers: authHeaders })
+          fetch('/api/stats/summary', { headers: authHeaders }),
+          fetch('/api/stats/sales-trend', { headers: authHeaders }),
+          fetch('/api/stats/top-products', { headers: authHeaders })
         ])
         
         setSummary(await summaryRes.json())
@@ -237,7 +237,7 @@ export default function AnalyticsPage() {
               <h3 className="font-bold text-slate-800">Ringkasan Performa Produk</h3>
               {/* <button className="text-xs font-bold text-primary-600 hover:underline">Download Report</button> */}
             </div>
-            <div className="overflow-x-auto">
+            <div className="table-responsive">
               <table className="w-full text-sm text-left">
                 <thead className="text-[10px] text-slate-400 font-bold uppercase tracking-wider bg-slate-50/30">
                   <tr>

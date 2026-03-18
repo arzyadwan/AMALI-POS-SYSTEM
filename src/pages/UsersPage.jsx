@@ -16,7 +16,7 @@ export default function UsersPage() {
   async function fetchUsers() {
     setLoading(true)
     try {
-      const res = await fetch('http://localhost:3002/api/auth/users', { headers: authHeaders })
+      const res = await fetch('/api/auth/users', { headers: authHeaders })
       const data = await res.json()
       setUsers(data)
     } finally {
@@ -31,7 +31,7 @@ export default function UsersPage() {
     setFormError('')
     setFormLoading(true)
     try {
-      const res = await fetch('http://localhost:3002/api/auth/register', {
+      const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: authHeaders,
         body: JSON.stringify(form)
@@ -50,7 +50,7 @@ export default function UsersPage() {
 
   async function handleDelete(id) {
     if (!window.confirm('Hapus pengguna ini?')) return
-    await fetch(`http://localhost:3002/api/auth/users/${id}`, { method: 'DELETE', headers: authHeaders })
+    await fetch(`/api/auth/users/${id}`, { method: 'DELETE', headers: authHeaders })
     fetchUsers()
   }
 
@@ -124,44 +124,44 @@ export default function UsersPage() {
         <div className="clean-card shadow-sm animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
           {loading ? (
             <div className="p-10 text-center text-slate-400 text-sm">Memuat...</div>
-          ) : users.length === 0 ? (
-            <div className="p-10 text-center text-slate-400 text-sm">Belum ada pengguna</div>
           ) : (
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-slate-100">
-                  <th className="text-left text-[10px] text-slate-400 font-semibold uppercase tracking-wider p-4">Pengguna</th>
-                  <th className="text-left text-[10px] text-slate-400 font-semibold uppercase tracking-wider p-4">Username</th>
-                  <th className="text-left text-[10px] text-slate-400 font-semibold uppercase tracking-wider p-4">Role</th>
-                  <th className="text-left text-[10px] text-slate-400 font-semibold uppercase tracking-wider p-4">Bergabung</th>
-                  <th className="p-4"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map(u => (
-                  <tr key={u.id} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors last:border-0">
-                    <td className="p-4">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold ${u.role === 'ADMIN' ? 'bg-red-100 text-red-600' : 'bg-emerald-100 text-emerald-600'}`}>
-                          {u.role === 'ADMIN' ? <ShieldCheck className="w-4 h-4" /> : <User className="w-4 h-4" />}
-                        </div>
-                        <span className="font-semibold text-slate-800 text-sm">{u.name || '—'}</span>
-                      </div>
-                    </td>
-                    <td className="p-4 text-slate-600 text-sm font-mono">@{u.username}</td>
-                    <td className="p-4">
-                      <span className={`text-[10px] font-bold px-2.5 py-1 rounded-lg ${roleColors[u.role]}`}>{u.role}</span>
-                    </td>
-                    <td className="p-4 text-slate-400 text-xs">{new Date(u.createdAt).toLocaleDateString('id-ID')}</td>
-                    <td className="p-4">
-                      <button onClick={() => handleDelete(u.id)} className="p-2 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </td>
+            <div className="table-responsive">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-slate-100">
+                    <th className="text-left text-[10px] text-slate-400 font-semibold uppercase tracking-wider p-4">Pengguna</th>
+                    <th className="text-left text-[10px] text-slate-400 font-semibold uppercase tracking-wider p-4">Username</th>
+                    <th className="text-left text-[10px] text-slate-400 font-semibold uppercase tracking-wider p-4">Role</th>
+                    <th className="text-left text-[10px] text-slate-400 font-semibold uppercase tracking-wider p-4">Bergabung</th>
+                    <th className="p-4"></th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {users.map(u => (
+                    <tr key={u.id} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors last:border-0">
+                      <td className="p-4">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold ${u.role === 'ADMIN' ? 'bg-red-100 text-red-600' : 'bg-emerald-100 text-emerald-600'}`}>
+                            {u.role === 'ADMIN' ? <ShieldCheck className="w-4 h-4" /> : <User className="w-4 h-4" />}
+                          </div>
+                          <span className="font-semibold text-slate-800 text-sm">{u.name || '—'}</span>
+                        </div>
+                      </td>
+                      <td className="p-4 text-slate-600 text-sm font-mono">@{u.username}</td>
+                      <td className="p-4">
+                        <span className={`text-[10px] font-bold px-2.5 py-1 rounded-lg ${roleColors[u.role]}`}>{u.role}</span>
+                      </td>
+                      <td className="p-4 text-slate-400 text-xs">{new Date(u.createdAt).toLocaleDateString('id-ID')}</td>
+                      <td className="p-4">
+                        <button onClick={() => handleDelete(u.id)} className="p-2 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </div>

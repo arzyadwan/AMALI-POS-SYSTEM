@@ -26,8 +26,8 @@ export default function CollectionPage() {
     setLoading(true)
     try {
       const [agingRes, overdueRes] = await Promise.all([
-        fetch('http://localhost:3002/api/collection/aging', { headers: authHeaders }),
-        fetch('http://localhost:3002/api/collection/overdue', { headers: authHeaders })
+        fetch('/api/collection/aging', { headers: authHeaders }),
+        fetch('/api/collection/overdue', { headers: authHeaders })
       ])
       setAgingData(await agingRes.json())
       setOverdueList(await overdueRes.json())
@@ -52,7 +52,7 @@ export default function CollectionPage() {
 
   async function confirmPay() {
     try {
-      const res = await fetch('http://localhost:3002/api/installments', {
+      const res = await fetch('/api/installments', {
         method: 'POST',
         headers: authHeaders,
         body: JSON.stringify({ transactionId: payingInst.transactionId, amount: payingInst.amount })
@@ -101,7 +101,7 @@ export default function CollectionPage() {
         )}
 
         {/* Stats */}
-        <div className="grid grid-cols-4 gap-4 animate-fadeInUp" style={{ animationDelay: '0.05s' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-fadeInUp" style={{ animationDelay: '0.05s' }}>
           {[
             { label: 'Total Piutang', value: formatRupiah(summary.totalOverdue), icon: DollarSign, color: 'text-red-500 bg-red-50' },
             { label: 'Pelanggan Menunggak', value: summary.customerCount, icon: Users, color: 'text-amber-500 bg-amber-50' },
@@ -123,9 +123,9 @@ export default function CollectionPage() {
           })}
         </div>
 
-        <div className="grid grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           {/* Aging Report Table */}
-          <div className="col-span-3 space-y-4 animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
+          <div className="lg:col-span-3 space-y-4 animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
             <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-slate-400" /> Laporan Aging Piutang
             </h3>
@@ -140,7 +140,8 @@ export default function CollectionPage() {
                   <p className="text-slate-500 text-sm font-medium">Tidak ada piutang yang jatuh tempo 🎉</p>
                 </div>
               ) : (
-                <table className="w-full text-sm">
+                <div className="table-responsive">
+                  <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-slate-100">
                       <th className="text-left text-[10px] text-slate-400 font-semibold uppercase tracking-wider p-4">Pelanggan</th>
@@ -177,12 +178,13 @@ export default function CollectionPage() {
                     ))}
                   </tbody>
                 </table>
-              )}
-            </div>
+              </div>
+            )}
+          </div>
           </div>
 
           {/* Overdue Installments */}
-          <div className="col-span-2 space-y-4 animate-fadeInUp" style={{ animationDelay: '0.15s' }}>
+          <div className="lg:col-span-2 space-y-4 animate-fadeInUp" style={{ animationDelay: '0.15s' }}>
             <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2 justify-between">
               <span className="flex items-center gap-2"><Clock className="w-4 h-4 text-slate-400" /> Cicilan Jatuh Tempo</span>
               {selectedCustomer && (
