@@ -117,8 +117,9 @@ app.get('/api/products/:id', async (req, res) => {
 
 app.post('/api/products', async (req, res) => {
   try {
+    const { name, sku, price, costPrice, stock, image, categoryId, supplierId } = req.body
     const product = await prisma.product.create({
-      data: req.body,
+      data: { name, sku, price, costPrice, stock, image, categoryId, supplierId },
       include: { category: true, supplier: true }
     })
     res.status(201).json(product)
@@ -129,9 +130,10 @@ app.post('/api/products', async (req, res) => {
 
 app.put('/api/products/:id', async (req, res) => {
   try {
+    const { name, sku, price, costPrice, stock, image, categoryId, supplierId } = req.body
     const product = await prisma.product.update({
       where: { id: parseInt(req.params.id) },
-      data: req.body,
+      data: { name, sku, price, costPrice, stock, image, categoryId, supplierId },
       include: { category: true, supplier: true }
     })
     res.json(product)
@@ -375,51 +377,66 @@ app.post('/api/installments', async (req, res) => {
   try {
     const { transactionId, amount } = req.body
     const txId = parseInt(transactionId)
-    const paidAmount = parseFloat(amount)
+    let remainingPayment = parseFloat(amount)
     const now = new Date()
     const LATE_FEE_PER_MONTH = 50000
 
-    // Find the next PENDING installment for this transaction
-    const nextPending = await prisma.installment.findFirst({
+    // Find all pending installments for this transaction
+    const pendingInstallments = await prisma.installment.findMany({
       where: { transactionId: txId, status: 'PENDING' },
       orderBy: { dueDate: 'asc' }
     })
 
-    if (!nextPending) {
+    if (pendingInstallments.length === 0) {
       return res.status(400).json({ error: 'Tidak ada cicilan yang perlu dibayar' })
     }
 
-    // Calculate late fee if paying after due date
-    let lateFee = 0
-    if (now > new Date(nextPending.dueDate)) {
-      const diffMs = now - new Date(nextPending.dueDate)
-      const diffMonths = Math.ceil(diffMs / (1000 * 60 * 60 * 24 * 30))
-      lateFee = diffMonths * LATE_FEE_PER_MONTH
+    let totalLateFee = 0
+    let lastProcessedInstallment = null
+
+    // Distribute payment across pending installments
+    for (const inst of pendingInstallments) {
+      if (remainingPayment <= 0) break
+
+      let lateFee = 0
+      if (now > new Date(inst.dueDate)) {
+        const diffMs = now - new Date(inst.dueDate)
+        const diffMonths = Math.ceil(diffMs / (1000 * 60 * 60 * 24 * 30))
+        lateFee = diffMonths * LATE_FEE_PER_MONTH
+      }
+
+      // Determine how much to pay for this installment
+      // We prioritize exact installment amount, but allow excess to spill over
+      const payToThis = Math.min(remainingPayment, inst.amount)
+      
+      const updated = await prisma.installment.update({
+        where: { id: inst.id },
+        data: {
+          status: 'PAID',
+          paymentDate: now,
+          amount: payToThis,
+          lateFee
+        }
+      })
+
+      remainingPayment -= payToThis
+      totalLateFee += lateFee
+      lastProcessedInstallment = updated
     }
 
-    const installment = await prisma.installment.update({
-      where: { id: nextPending.id },
-      data: {
-        status: 'PAID',
-        paymentDate: now,
-        amount: paidAmount,
-        lateFee
-      }
+    // Check if everything is now paid
+    const remainingCount = await prisma.installment.count({
+      where: { transactionId: txId, status: 'PENDING' }
     })
 
-    const allInstallments = await prisma.installment.findMany({
-      where: { transactionId: txId }
-    })
-    const pendingCount = allInstallments.filter(i => i.status === 'PENDING').length
-
-    if (pendingCount === 0) {
+    if (remainingCount === 0) {
       await prisma.transaction.update({
         where: { id: txId },
         data: { status: 'PAID_OFF' }
       })
     }
 
-    res.status(201).json({ ...installment, lateFee })
+    res.status(201).json({ ...lastProcessedInstallment, lateFee: totalLateFee, finished: remainingCount === 0 })
   } catch (err) {
     res.status(400).json({ error: err.message })
   }

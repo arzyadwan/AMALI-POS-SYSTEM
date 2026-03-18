@@ -10,7 +10,7 @@ export default function ProductsPage() {
   const [filterCategory, setFilterCategory] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [editProduct, setEditProduct] = useState(null)
-  const [form, setForm] = useState({ name: '', sku: '', barcode: '', price: 0, costPrice: 0, stock: 0, image: '', categoryId: '', supplierId: '' })
+  const [form, setForm] = useState({ name: '', sku: '', price: 0, costPrice: 0, stock: 0, image: '', categoryId: '', supplierId: '' })
 
   useEffect(() => {
     fetchProducts()
@@ -43,7 +43,7 @@ export default function ProductsPage() {
   const openAdd = () => {
     setEditProduct(null)
     setForm({ 
-      name: '', sku: '', barcode: '', price: 0, costPrice: 0, stock: 0, image: '', 
+      name: '', sku: '', price: 0, costPrice: 0, stock: 0, image: '', 
       categoryId: categories[0]?.id || '',
       supplierId: ''
     })
@@ -55,7 +55,6 @@ export default function ProductsPage() {
     setForm({
       name: product.name,
       sku: product.sku,
-      barcode: product.barcode || '',
       price: product.price,
       costPrice: product.costPrice || 0,
       stock: product.stock,

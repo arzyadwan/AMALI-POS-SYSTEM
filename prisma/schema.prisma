@@ -24,7 +24,6 @@ model Product {
   categoryId Int
   supplierId Int?
   createdAt  DateTime          @default(now())
-  barcode    String?           @unique
   supplier   Supplier?         @relation(fields: [supplierId], references: [id])
   category   Category          @relation(fields: [categoryId], references: [id])
   items      TransactionItem[]

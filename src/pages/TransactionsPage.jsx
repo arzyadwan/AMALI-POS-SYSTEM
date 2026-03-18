@@ -175,15 +175,13 @@ export default function TransactionsPage() {
                           <div className="flex justify-between text-[9px] mb-1 font-bold">
                             <span className="text-slate-400">PROGRES</span>
                             <span className="text-primary-600">
-                              {tx.status === 'PAID_OFF' ? '100' : Math.round((tx.installments?.reduce((sum, i) => sum + i.amount, 0) || 0) / tx.totalCredit * 100)}%
+                              {tx.status === 'PAID_OFF' ? '100' : Math.round((tx.installments?.filter(i => i.status === 'PAID').reduce((sum, i) => sum + i.amount, 0) || 0) / tx.totalCredit * 100)}%
                             </span>
                           </div>
                           <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden flex gap-0.5 p-[1px]">
                             {Array.from({ length: tx.tenor }).map((_, idx) => {
-                              const totalPaid = tx.installments?.reduce((sum, i) => sum + i.amount, 0) || 0;
-                              // Threshold for "paid" month is slightly less than monthlyPayment to account for floats
-                              const monthsPaid = Math.floor((totalPaid + 100) / tx.monthlyPayment);
-                              const isPaid = idx < monthsPaid || tx.status === 'PAID_OFF';
+                              // Check if this specific month index is paid
+                              const isPaid = tx.installments?.find(i => i.monthIndex === (idx + 1))?.status === 'PAID' || tx.status === 'PAID_OFF';
                               return (
                                 <div 
                                   key={idx} 
@@ -309,13 +307,13 @@ export default function TransactionsPage() {
                       <div className="flex justify-between text-xs py-1 mt-1">
                         <span className="text-slate-500">Telah Dibayar</span>
                         <span className="text-emerald-600 font-bold">
-                          {formatRupiah(selectedTx.installments?.reduce((sum, i) => sum + i.amount, 0) || 0)}
+                          {formatRupiah(selectedTx.installments?.filter(i => i.status === 'PAID').reduce((sum, i) => sum + i.amount, 0) || 0)}
                         </span>
                       </div>
                       <div className="flex justify-between text-xs py-1">
                         <span className="text-slate-500">Sisa Tagihan</span>
                         <span className="text-danger-600 font-bold">
-                          {formatRupiah(Math.max(0, selectedTx.totalCredit - (selectedTx.installments?.reduce((sum, i) => sum + i.amount, 0) || 0)))}
+                          {formatRupiah(Math.max(0, selectedTx.totalCredit - (selectedTx.installments?.filter(i => i.status === 'PAID').reduce((sum, i) => sum + i.amount, 0) || 0)))}
                         </span>
                       </div>
                     </>
@@ -360,7 +358,7 @@ export default function TransactionsPage() {
               <div className="mb-5 p-4 bg-slate-50 rounded-xl border border-slate-100 space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-500">Sisa Tagihan</span>
-                  <span className="text-slate-900 font-bold">{formatRupiah(Math.max(0, selectedTx.totalCredit - (selectedTx.installments?.reduce((sum, i) => sum + i.amount, 0) || 0)))}</span>
+                  <span className="text-slate-900 font-bold">{formatRupiah(Math.max(0, selectedTx.totalCredit - (selectedTx.installments?.filter(i => i.status === 'PAID').reduce((sum, i) => sum + i.amount, 0) || 0)))}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-500">Cicilan per Bulan</span>
