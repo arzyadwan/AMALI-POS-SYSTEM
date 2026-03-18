@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Search, Filter, ShoppingCart, Plus, Minus, Trash2, CreditCard, Banknote, User, X, Check, ChevronDown } from 'lucide-react'
+import { Search, Filter, ShoppingCart, Plus, Minus, Trash2, CreditCard, Banknote, User, X, Check, ChevronDown, Download } from 'lucide-react'
 import { formatRupiah } from '../utils/formatCurrency'
 import { calculateMonthly, calculateTotalCredit, TENOR_OPTIONS, CREDIT_FACTORS, ADMIN_FEE } from '../utils/creditCalculator'
 
@@ -160,7 +160,8 @@ export default function POSPage() {
   }
 
   return (
-    <div className="flex h-full">
+    <>
+      <div className="flex h-full">
       {/* Products Panel */}
       <div className="flex-1 flex flex-col overflow-hidden p-6">
         {/* Header */}
@@ -658,7 +659,7 @@ export default function POSPage() {
                   <div className="border-t border-dashed border-slate-200 my-2" />
                   {lastTransaction.items?.map(item => (
                     <div key={item.id} className="flex justify-between text-[11px] py-0.5">
-                      <span className="text-slate-600">{item.product?.name} <span className="text-slate-400">×{item.quantity}</span></span>
+                      <span className="text-slate-600">{item.product?.name || 'Produk'} <span className="text-slate-400">×{item.quantity}</span></span>
                       <span className="text-slate-900 font-medium">{formatRupiah(item.price * item.quantity)}</span>
                     </div>
                   ))}
@@ -682,15 +683,99 @@ export default function POSPage() {
               </div>
             )}
 
-            <button
-              onClick={() => { setCheckoutSuccess(false); setLastTransaction(null) }}
-              className="btn-primary w-full text-sm"
-            >
-              Selesai
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => window.print()}
+                className="btn-secondary flex-1 text-sm flex items-center justify-center gap-2"
+              >
+                <Download className="w-4 h-4" /> Cetak Struk
+              </button>
+              <button
+                onClick={() => { setCheckoutSuccess(false); setLastTransaction(null) }}
+                className="btn-primary flex-1 text-sm"
+              >
+                Selesai
+              </button>
+            </div>
           </div>
         </div>
       )}
     </div>
+
+      {/* Hidden Thermal Receipt for Printing */}
+      <div id="thermal-receipt">
+        {lastTransaction && (
+          <div className="p-4 bg-white text-black font-mono">
+           <div className="text-center mb-4">
+             <h2 className="text-lg font-bold uppercase">AMALI KREDIT</h2>
+             <p className="text-[10px]">Toko Elektronik & Rumah</p>
+             <p className="text-[9px]">Jln. Raya Amali No. 12</p>
+             <p className="text-[9px]">Telp: 0812-3456-7890</p>
+           </div>
+           
+           <div className="border-t border-dashed border-black my-2" />
+           
+           <div className="text-[10px] space-y-0.5">
+             <div className="flex justify-between">
+               <span>No: #{lastTransaction.id}</span>
+               <span>{new Date(lastTransaction.createdAt).toLocaleDateString('id-ID')}</span>
+             </div>
+             <div>Kasir: {lastTransaction.user?.name || 'Admin'}</div>
+             {lastTransaction.customer && (
+               <div>Plgn: {lastTransaction.customer.name}</div>
+             )}
+           </div>
+           
+           <div className="border-t border-dashed border-black my-2" />
+           
+           <div className="space-y-1">
+             {lastTransaction.items?.flatMap(item => (
+                <div key={item.id} className="text-[10px]">
+                  <div className="flex justify-between">
+                    <span>{item.product?.name || 'Produk'}</span>
+                  </div>
+                  <div className="flex justify-between pl-2">
+                    <span>{item.quantity} x {formatRupiah(item.price)}</span>
+                    <span>{formatRupiah(item.price * item.quantity)}</span>
+                  </div>
+                </div>
+             ))}
+           </div>
+           
+           <div className="border-t border-dashed border-black my-2" />
+           
+           <div className="text-[10px] space-y-1">
+             <div className="flex justify-between font-bold">
+               <span>TOTAL</span>
+               <span>{formatRupiah(lastTransaction.totalPrice)}</span>
+             </div>
+             {lastTransaction.type === 'CREDIT' && (
+               <>
+                 <div className="flex justify-between">
+                   <span>DP</span>
+                   <span>{formatRupiah(lastTransaction.dpAmount)}</span>
+                 </div>
+                 <div className="flex justify-between">
+                   <span>Cicilan ({lastTransaction.tenor}x)</span>
+                   <span>{formatRupiah(lastTransaction.monthlyPayment)}</span>
+                 </div>
+               </>
+             )}
+             <div className="flex justify-between">
+               <span>Bayar: {lastTransaction.type}</span>
+             </div>
+           </div>
+           
+           <div className="border-t border-dashed border-black my-4" />
+           
+           <div className="text-center text-[9px]">
+             <p>Terima Kasih Atas</p>
+             <p>Kunjungan Anda</p>
+             <p className="mt-2 text-[8px]">AMALI KREDIT v2.1.0-hardware</p>
+           </div>
+          </div>
+        )}
+      </div>
+    </>
   )
 }

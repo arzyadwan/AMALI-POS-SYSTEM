@@ -10,7 +10,7 @@ export default function ProductsPage() {
   const [filterCategory, setFilterCategory] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [editProduct, setEditProduct] = useState(null)
-  const [form, setForm] = useState({ name: '', sku: '', price: 0, costPrice: 0, stock: 0, image: '', categoryId: '', supplierId: '' })
+  const [form, setForm] = useState({ name: '', sku: '', barcode: '', price: 0, costPrice: 0, stock: 0, image: '', categoryId: '', supplierId: '' })
 
   useEffect(() => {
     fetchProducts()
@@ -43,7 +43,7 @@ export default function ProductsPage() {
   const openAdd = () => {
     setEditProduct(null)
     setForm({ 
-      name: '', sku: '', price: 0, costPrice: 0, stock: 0, image: '', 
+      name: '', sku: '', barcode: '', price: 0, costPrice: 0, stock: 0, image: '', 
       categoryId: categories[0]?.id || '',
       supplierId: ''
     })
@@ -55,6 +55,7 @@ export default function ProductsPage() {
     setForm({
       name: product.name,
       sku: product.sku,
+      barcode: product.barcode || '',
       price: product.price,
       costPrice: product.costPrice || 0,
       stock: product.stock,
@@ -143,7 +144,7 @@ export default function ProductsPage() {
               <thead>
                 <tr className="border-b border-slate-200 bg-slate-50/50">
                   <th className="text-left text-[10px] text-slate-500 font-semibold uppercase py-3 px-4">Produk</th>
-                  <th className="text-left text-[10px] text-slate-500 font-semibold uppercase py-3 px-4">SKU</th>
+                  <th className="text-left text-[10px] text-slate-500 font-semibold uppercase py-3 px-4">Kode</th>
                   <th className="text-left text-[10px] text-slate-500 font-semibold uppercase py-3 px-4">Kategori</th>
                   <th className="text-right text-[10px] text-slate-500 font-semibold uppercase py-3 px-4">Harga</th>
                   <th className="text-center text-[10px] text-slate-500 font-semibold uppercase py-3 px-4">Stok</th>
@@ -229,11 +230,11 @@ export default function ProductsPage() {
                     <input type="text" value={form.sku} onChange={e => setForm({...form, sku: e.target.value})}
                       className="input-modern" />
                   </div>
-                  <div>
-                    <label className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block mb-1">Emoji Icon</label>
-                    <input type="text" value={form.image} onChange={e => setForm({...form, image: e.target.value})}
-                      className="input-modern" />
-                  </div>
+                </div>
+                <div>
+                  <label className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block mb-1">Emoji Icon</label>
+                  <input type="text" value={form.image} onChange={e => setForm({...form, image: e.target.value})}
+                    className="input-modern" />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
