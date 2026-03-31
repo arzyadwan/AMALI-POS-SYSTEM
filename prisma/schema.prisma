@@ -24,8 +24,8 @@ model Product {
   categoryId Int
   supplierId Int?
   createdAt  DateTime          @default(now())
-  supplier   Supplier?         @relation(fields: [supplierId], references: [id])
   category   Category          @relation(fields: [categoryId], references: [id])
+  supplier   Supplier?         @relation(fields: [supplierId], references: [id])
   items      TransactionItem[]
 }
 
@@ -42,9 +42,8 @@ model Supplier {
 model Customer {
   id           Int           @id @default(autoincrement())
   name         String
-  phone        String
-  address      String        @default("")
-  nik          String        @default("")
+  phone        String?
+  address      String?
   createdAt    DateTime      @default(now())
   transactions Transaction[]
 }
@@ -61,6 +60,8 @@ model Transaction {
   status         String            @default("COMPLETED")
   startDate      DateTime          @default(now())
   createdAt      DateTime          @default(now())
+  bookCode       String?
+  itemName       String?
   installments   Installment[]
   customer       Customer?         @relation(fields: [customerId], references: [id])
   items          TransactionItem[]

@@ -1,15 +1,16 @@
 import { useState, useMemo } from 'react'
 import { Calculator, TrendingUp, ArrowRight, Zap, ChevronDown, ChevronUp, AlertCircle } from 'lucide-react'
-import { formatRupiah } from '../utils/formatCurrency'
+import { formatRupiah, formatNumber, parseNumber } from '../utils/formatCurrency'
 import { calculateMonthly, calculateTotalCredit, calculateEarlyPayoff, getAllTenorComparison, TENOR_OPTIONS, CREDIT_FACTORS, ADMIN_FEE } from '../utils/creditCalculator'
 
 export default function SimulatorPage() {
-  const [price, setPrice] = useState(1000000)
+  const [price, setPrice] = useState(0)
   const [dp, setDp] = useState(0)
   const [selectedTenor, setSelectedTenor] = useState(12)
   const [showEarlyPayoff, setShowEarlyPayoff] = useState(false)
   const [paidMonths, setPaidMonths] = useState(3)
   const [targetTenor, setTargetTenor] = useState(3)
+  const [adminFee, setAdminFee] = useState(ADMIN_FEE)
 
   const dpMinimum = Math.round(price * 0.2)
   const isDpLowerThanMin = dp < dpMinimum
@@ -17,7 +18,7 @@ export default function SimulatorPage() {
   const principal = Math.max(price - dp, 0)
   const monthly = calculateMonthly(principal, selectedTenor)
   const totalCredit = calculateTotalCredit(principal, selectedTenor)
-  const grandTotal = totalCredit + dp + ADMIN_FEE
+  const grandTotal = totalCredit + dp + adminFee
   const margin = totalCredit - principal
   const comparison = useMemo(() => getAllTenorComparison(principal), [principal])
 
@@ -50,14 +51,14 @@ export default function SimulatorPage() {
               <div>
                 <label className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block mb-1.5">Harga Barang</label>
                 <input
-                  type="number"
-                  value={price}
-                  onChange={e => setPrice(parseInt(e.target.value) || 0)}
-                  onBlur={() => {
-                    if (dp < dpMinimum) {
-                      setDp(dpMinimum)
-                    }
+                  type="text"
+                  value={formatNumber(price)}
+                  onChange={e => {
+                    const val = parseNumber(e.target.value)
+                    setPrice(val)
+                    setDp(Math.round(val * 0.2))
                   }}
+                  placeholder="0"
                   className="input-modern"
                 />
                 <p className="text-[11px] text-slate-500 mt-1">{formatRupiah(price)}</p>
@@ -66,19 +67,31 @@ export default function SimulatorPage() {
               <div>
                 <label className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block mb-1.5">Uang Muka (DP)</label>
                 <input
-                  type="number"
-                  value={dp || ''}
-                  onChange={e => setDp(parseInt(e.target.value) || 0)}
+                  type="text"
+                  value={formatNumber(dp)}
+                  onChange={e => setDp(parseNumber(e.target.value))}
                   placeholder="0"
                   className={`input-modern ${isDpLowerThanMin ? 'border-amber-400 focus:border-amber-500 focus:ring-amber-100 bg-amber-50/10' : ''}`}
                 />
                 {isDpLowerThanMin ? (
-                  <p className="text-[10px] text-amber-600 font-bold mt-1.5 flex items-center gap-1 animate-pulse">
-                    ⚠️ DP minimal 20% ({formatRupiah(dpMinimum)})
+                  <p className="text-[10px] text-amber-600 font-medium mt-1.5 flex items-center gap-1">
+                    💡 Rekomendasi 20% ({formatRupiah(dpMinimum)})
                   </p>
                 ) : (
                   <p className="text-[11px] text-slate-500 mt-1">{formatRupiah(dp)}</p>
                 )}
+              </div>
+
+              <div>
+                <label className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block mb-1.5">Biaya Admin</label>
+                <input
+                  type="text"
+                  value={formatNumber(adminFee)}
+                  onChange={e => setAdminFee(parseNumber(e.target.value))}
+                  placeholder="0"
+                  className="input-modern"
+                />
+                <p className="text-[11px] text-slate-500 mt-1">{formatRupiah(adminFee)}</p>
               </div>
 
               <div>
@@ -107,7 +120,7 @@ export default function SimulatorPage() {
                 </div>
                 <div className="flex justify-between text-xs mb-1">
                   <span className="text-slate-500">Biaya Admin</span>
-                  <span className="text-primary-600 font-bold">{formatRupiah(ADMIN_FEE)}</span>
+                  <span className="text-primary-600 font-bold">{formatRupiah(adminFee)}</span>
                 </div>
                 <div className="flex justify-between text-xs">
                   <span className="text-slate-500">Faktor Pengali</span>
@@ -144,10 +157,11 @@ export default function SimulatorPage() {
                     <label className="text-[11px] text-slate-500 font-semibold block mb-1.5">Bulan Sudah Dibayar</label>
                     <input
                       type="number"
-                      value={paidMonths}
+                      value={paidMonths || ''}
                       onChange={e => setPaidMonths(parseInt(e.target.value) || 0)}
                       min="0"
                       max={selectedTenor}
+                      placeholder="0"
                       className="input-modern"
                     />
                   </div>
@@ -193,17 +207,17 @@ export default function SimulatorPage() {
                 <p className="text-[10px] text-slate-400 mt-1">× {selectedTenor} bulan</p>
               </div>
               <div className="clean-card p-4 lg:p-5 text-center shadow-sm">
-                <p className="text-[10px] lg:text-[11px] text-slate-500 font-semibold uppercase tracking-wider mb-2">Total Pembayaran</p>
-                <p className="text-xl lg:text-2xl font-bold text-warning-500">{formatRupiah(grandTotal)}</p>
-                <p className="text-[9px] lg:text-[10px] text-slate-400 mt-1 leading-tight">
-                  {formatRupiah(totalCredit)} (K) + {formatRupiah(dp)} (D) + {formatRupiah(ADMIN_FEE)} (A)
+                <p className="text-[10px] lg:text-[11px] text-slate-500 font-semibold uppercase tracking-wider mb-2">Total Kewajiban</p>
+                <p className="text-xl lg:text-2xl font-bold text-emerald-600">{formatRupiah(totalCredit)}</p>
+                <p className="text-[9px] lg:text-[10px] text-slate-400 mt-1">
+                  Jumlah yang harus dibayar
                 </p>
               </div>
               <div className="clean-card p-4 lg:p-5 text-center shadow-sm">
-                <p className="text-[10px] lg:text-[11px] text-slate-500 font-semibold uppercase tracking-wider mb-2">Margin Keuntungan</p>
-                <p className="text-xl lg:text-2xl font-bold text-emerald-600">{formatRupiah(margin)}</p>
-                <p className="text-[9px] lg:text-[10px] text-slate-400 mt-1">
-                  {principal > 0 ? `${((margin / principal) * 100).toFixed(1)}%` : '—'}
+                <p className="text-[10px] lg:text-[11px] text-slate-500 font-semibold uppercase tracking-wider mb-2">Total Pembayaran</p>
+                <p className="text-xl lg:text-2xl font-bold text-warning-500">{formatRupiah(grandTotal)}</p>
+                <p className="text-[9px] lg:text-[10px] text-slate-400 mt-1 leading-tight">
+                  {formatRupiah(totalCredit)} (K) + {formatRupiah(dp)} (D) + {formatRupiah(adminFee)} (A)
                 </p>
               </div>
             </div>
@@ -217,13 +231,10 @@ export default function SimulatorPage() {
               <div className="table-responsive">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-slate-200">
-                      <th className="text-left text-[10px] text-slate-500 font-semibold uppercase py-3 px-3">Tenor</th>
-                      <th className="text-left text-[10px] text-slate-500 font-semibold uppercase py-3 px-3">Faktor</th>
-                      <th className="text-right text-[10px] text-slate-500 font-semibold uppercase py-3 px-3">Cicilan/Bulan</th>
-                      <th className="text-right text-[10px] text-slate-500 font-semibold uppercase py-3 px-3">Total Kewajiban</th>
-                      <th className="text-right text-[10px] text-slate-500 font-semibold uppercase py-3 px-3">Margin</th>
-                      <th className="text-right text-[10px] text-slate-500 font-semibold uppercase py-3 px-3">%</th>
+                    <tr className="border-b border-slate-200 bg-slate-50/50">
+                      <th className="text-left text-[11px] text-slate-500 font-bold uppercase py-4 px-4 tracking-wider">Tenor</th>
+                      <th className="text-center text-[11px] text-slate-500 font-bold uppercase py-4 px-4 tracking-wider">Cicilan/Bulan</th>
+                      <th className="text-right text-[11px] text-slate-500 font-bold uppercase py-4 px-4 tracking-wider">Total Kewajiban</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -234,21 +245,24 @@ export default function SimulatorPage() {
                           row.tenor === selectedTenor ? 'bg-primary-50/50' : ''
                         }`}
                       >
-                        <td className="py-3 px-3">
-                          <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold ${
+                        <td className="py-5 px-4">
+                          <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${
                             row.tenor === selectedTenor
-                              ? 'bg-primary-600 text-white shadow-sm'
-                              : 'bg-slate-100 text-slate-600'
+                              ? 'bg-primary-600 text-white shadow-lg shadow-primary-200'
+                              : 'bg-slate-100 text-slate-700'
                           }`}>
                             {row.tenor} Bulan
-                            {row.tenor === selectedTenor && <span className="text-[10px] font-bold">✓</span>}
+                            {row.tenor === selectedTenor && <span className="text-xs font-bold">✓</span>}
                           </span>
                         </td>
-                        <td className="py-3 px-3 text-accent-600 font-mono text-sm font-semibold">{row.factor}</td>
-                        <td className="py-3 px-3 text-right text-slate-900 font-semibold text-sm">{formatRupiah(row.monthly)}</td>
-                        <td className="py-3 px-3 text-right text-warning-600 font-bold text-sm">{formatRupiah(row.total)}</td>
-                        <td className="py-3 px-3 text-right text-emerald-600 font-semibold text-sm">{formatRupiah(row.margin)}</td>
-                        <td className="py-3 px-3 text-right text-slate-500 font-medium text-xs">{row.marginPercent}%</td>
+                        <td className={`py-5 px-4 text-center font-bold text-lg ${
+                          row.tenor === selectedTenor ? 'text-primary-700' : 'text-slate-900'
+                        }`}>
+                          {formatRupiah(row.monthly)}
+                        </td>
+                        <td className="py-5 px-4 text-right text-warning-600 font-extrabold text-lg">
+                          {formatRupiah(row.total)}
+                        </td>
                       </tr>
                     ))}
                   </tbody>

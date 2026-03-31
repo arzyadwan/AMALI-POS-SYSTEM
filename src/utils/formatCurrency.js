@@ -12,6 +12,21 @@ export function formatRupiah(amount) {
 }
 
 /**
+ * Format number with thousand separators (dot)
+ */
+export function formatNumber(amount) {
+  if (amount === null || amount === undefined || amount === 0) return ''
+  return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+}
+
+/**
+ * Parse string with thousand separators back to number
+ */
+export function parseNumber(string) {
+  if (!string) return 0
+  return parseInt(string.replace(/\./g, '')) || 0
+}
+/**
  * Format date to Indonesian locale
  */
 export function formatDate(dateString) {

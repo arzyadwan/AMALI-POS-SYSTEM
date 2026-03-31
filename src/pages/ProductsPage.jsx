@@ -11,6 +11,11 @@ export default function ProductsPage() {
   const [showModal, setShowModal] = useState(false)
   const [editProduct, setEditProduct] = useState(null)
   const [form, setForm] = useState({ name: '', sku: '', price: 0, costPrice: 0, stock: 0, image: '', categoryId: '', supplierId: '' })
+  
+  // Category Management State
+  const [showCategoryModal, setShowCategoryModal] = useState(false)
+  const [editCategory, setEditCategory] = useState(null)
+  const [catForm, setCatForm] = useState({ name: '', icon: '📦' })
 
   useEffect(() => {
     fetchProducts()
@@ -89,8 +94,63 @@ export default function ProductsPage() {
 
   const handleDelete = async (id) => {
     if (!confirm('Hapus produk ini?')) return
-    await fetch(`/api/products/${id}`, { method: 'DELETE' })
+    await fetch(`/api/products/${id}`, { 
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('amali_token')}` }
+    })
     fetchProducts()
+  }
+
+  // Category Management Functions
+  const openCategoryModal = () => {
+    setEditCategory(null)
+    setCatForm({ name: '', icon: '📦' })
+    setShowCategoryModal(true)
+  }
+
+  const openEditCategory = (cat) => {
+    setEditCategory(cat)
+    setCatForm({ name: cat.name, icon: cat.icon || '📦' })
+  }
+
+  const handleCategorySubmit = async () => {
+    if (!catForm.name) return alert('Nama kategori wajib diisi')
+    
+    const url = editCategory ? `/api/categories/${editCategory.id}` : '/api/categories'
+    const method = editCategory ? 'PUT' : 'POST'
+    
+    const res = await fetch(url, {
+      method,
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('amali_token')}`
+      },
+      body: JSON.stringify(catForm)
+    })
+    
+    if (res.ok) {
+      setEditCategory(null)
+      setCatForm({ name: '', icon: '📦' })
+      fetchCategories()
+    } else {
+      const err = await res.json()
+      alert(err.error || 'Gagal menyimpan kategori')
+    }
+  }
+
+  const handleCategoryDelete = async (id) => {
+    if (!confirm('Hapus kategori ini?')) return
+    const res = await fetch(`/api/categories/${id}`, { 
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('amali_token')}` }
+    })
+    
+    if (res.ok) {
+      fetchCategories()
+    } else {
+      const err = await res.json()
+      alert(err.error || 'Gagal menghapus kategori')
+    }
   }
 
   return (
@@ -107,9 +167,14 @@ export default function ProductsPage() {
               <p className="text-slate-500 text-sm">{products.length} produk terdaftar</p>
             </div>
           </div>
-          <button onClick={openAdd} className="btn-primary flex items-center gap-2 text-sm">
-            <Plus className="w-4 h-4" /> Tambah Produk
-          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={openCategoryModal} className="btn-secondary flex items-center gap-2 text-sm">
+              Kelola Kategori
+            </button>
+            <button onClick={openAdd} className="btn-primary flex items-center gap-2 text-sm">
+              <Plus className="w-4 h-4" /> Tambah Produk
+            </button>
+          </div>
         </div>
 
         {/* Search & Filter */}
@@ -279,6 +344,91 @@ export default function ProductsPage() {
                 <button onClick={handleSubmit} className="flex-1 btn-primary text-sm flex items-center justify-center gap-2">
                   <Check className="w-4 h-4" /> {editProduct ? 'Simpan' : 'Tambah'}
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Category Management Modal */}
+        {showCategoryModal && (
+          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 modal-overlay">
+            <div className="clean-card w-[500px] rounded-2xl p-6 animate-fadeInUp shadow-xl">
+              <div className="flex items-center justify-between mb-5">
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900">Kelola Kategori</h3>
+                  <p className="text-xs text-slate-500">Atur kategori produk untuk POS</p>
+                </div>
+                <button onClick={() => setShowCategoryModal(false)} className="text-slate-400 hover:text-slate-600 bg-slate-100/50 hover:bg-slate-100 rounded-full p-1 transition-colors">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Add/Edit Form */}
+              <div className="bg-slate-50 p-4 rounded-xl mb-6 border border-slate-100">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">
+                  {editCategory ? 'Edit Kategori' : 'Kategori Baru'}
+                </label>
+                <div className="flex gap-2">
+                  <input 
+                    type="text" 
+                    placeholder="📦" 
+                    className="w-12 text-center input-modern"
+                    value={catForm.icon}
+                    onChange={e => setCatForm({...catForm, icon: e.target.value})}
+                  />
+                  <input 
+                    type="text" 
+                    placeholder="Nama Kategori..." 
+                    className="flex-1 input-modern"
+                    value={catForm.name}
+                    onChange={e => setCatForm({...catForm, name: e.target.value})}
+                  />
+                  <button 
+                    onClick={handleCategorySubmit}
+                    className="btn-primary px-4 py-2 text-sm"
+                  >
+                    {editCategory ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                  </button>
+                  {editCategory && (
+                    <button 
+                      onClick={() => { setEditCategory(null); setCatForm({ name: '', icon: '📦' }) }}
+                      className="btn-secondary px-4 py-2 text-sm"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* List */}
+              <div className="max-h-[300px] overflow-y-auto pr-1 space-y-2">
+                {categories.map(cat => (
+                  <div key={cat.id} className="flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:border-primary-100 transition-colors group bg-white">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xl">{cat.icon || '📦'}</span>
+                      <div>
+                        <p className="text-sm font-bold text-slate-800">{cat.name}</p>
+                        <p className="text-[10px] text-slate-400 font-medium">
+                          {cat._count?.products || 0} Produk terkait
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button 
+                        onClick={() => openEditCategory(cat)}
+                        className="p-1.5 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                      </button>
+                      <button 
+                        onClick={() => handleCategoryDelete(cat.id)}
+                        className="p-1.5 text-slate-400 hover:text-danger-500 hover:bg-danger-50 rounded-lg transition-all"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

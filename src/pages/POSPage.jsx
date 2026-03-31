@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Search, Filter, ShoppingCart, Plus, Minus, Trash2, CreditCard, Banknote, User, X, Check, ChevronDown, Download } from 'lucide-react'
-import { formatRupiah } from '../utils/formatCurrency'
+import { formatRupiah, formatNumber, parseNumber } from '../utils/formatCurrency'
 import { calculateMonthly, calculateTotalCredit, TENOR_OPTIONS, CREDIT_FACTORS, ADMIN_FEE } from '../utils/creditCalculator'
 
 export default function POSPage() {
@@ -12,6 +12,7 @@ export default function POSPage() {
   const [paymentType, setPaymentType] = useState('CASH')
   const [tenor, setTenor] = useState(12)
   const [dpAmount, setDpAmount] = useState(0)
+  const [bookCode, setBookCode] = useState('')
 
   // Customer State
   const [customers, setCustomers] = useState([])
@@ -114,6 +115,8 @@ export default function POSPage() {
         tenor: paymentType === 'CREDIT' ? tenor : 0,
         dpAmount: paymentType === 'CREDIT' ? dpAmount : 0,
         adminFee: paymentType === 'CREDIT' ? ADMIN_FEE : 0,
+        bookCode: paymentType === 'CREDIT' ? bookCode : null,
+        itemName: cart.map(i => i.name).join(', '),
         items: cart.map(item => ({
           productId: item.productId,
           quantity: item.quantity,
@@ -154,6 +157,7 @@ export default function POSPage() {
       setCustomerPhone('')
       setSelectedCustomerId('')
       setCustomerSearch('')
+      setBookCode('')
       fetchProducts()
     } catch (err) {
       console.error('Checkout failed:', err)
@@ -400,9 +404,9 @@ export default function POSPage() {
                 <div>
                   <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Uang Muka (DP)</label>
                   <input
-                    type="number"
-                    value={dpAmount || ''}
-                    onChange={e => setDpAmount(parseInt(e.target.value) || 0)}
+                    type="text"
+                    value={formatNumber(dpAmount)}
+                    onChange={e => setDpAmount(parseNumber(e.target.value))}
                     placeholder="0"
                     className={`input-modern mt-1 ${isDpLowerThanMin ? 'border-amber-400 focus:border-amber-500 focus:ring-amber-100 bg-amber-50/10' : ''}`}
                   />
@@ -429,6 +433,16 @@ export default function POSPage() {
                       </button>
                     ))}
                   </div>
+                </div>
+                <div>
+                  <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider block mb-1">Nomor Kode Buku <span className="text-red-500">*</span></label>
+                  <input
+                    type="text"
+                    value={bookCode}
+                    onChange={e => setBookCode(e.target.value.toUpperCase())}
+                    placeholder="Contoh: W-101"
+                    className="input-modern text-xs"
+                  />
                 </div>
                 <div className="clean-card p-3 space-y-1.5 bg-slate-50/50">
                   <div className="flex justify-between text-xs">

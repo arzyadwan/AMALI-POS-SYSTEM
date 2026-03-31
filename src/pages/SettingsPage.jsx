@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Database, Download, ShieldCheck, HardDrive, RefreshCcw } from 'lucide-react'
+import { Database, Download, ShieldCheck, HardDrive, RefreshCcw, Trash2, AlertTriangle } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
 export default function SettingsPage() {
@@ -35,6 +35,36 @@ export default function SettingsPage() {
     } catch (error) {
       console.error('Backup error:', error)
       alert(`Gagal mengunduh cadangan database: ${error.message}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleResetSystem = async () => {
+    const confirm1 = window.confirm('APAKAH ANDA YAKIN? Tindakan ini akan MENGHAPUS SELURUH DATA transaksi, pelanggan, dan produk. Data yang sudah dihapus tidak dapat dikembalikan!')
+    if (!confirm1) return
+
+    const confirm2 = window.confirm('KONFIRMASI TERAKHIR: Anda benar-benar yakin ingin mengosongkan sistem? (Data akun login tetap aman)')
+    if (!confirm2) return
+
+    setLoading(true)
+    try {
+      const response = await fetch('/api/system/reset', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error || 'Reset failed')
+
+      alert(data.message || 'Sistem berhasil direset!')
+      window.location.reload() // Reload to clear any cached data in state
+    } catch (error) {
+      console.error('Reset error:', error)
+      alert(`Gagal melakukan reset sistem: ${error.message}`)
     } finally {
       setLoading(false)
     }
@@ -112,6 +142,38 @@ export default function SettingsPage() {
                 </span>
               </div>
             </div>
+          </div>
+
+          {/* Reset System Card */}
+          <div className="clean-card p-6 border-red-100 bg-red-50/10 animate-fadeInUp" style={{ animationDelay: '0.3s' }}>
+            <div className="flex items-start justify-between mb-4">
+              <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center">
+                <Trash2 className="w-5 h-5 text-red-600" />
+              </div>
+            </div>
+            <h3 className="text-lg font-bold text-red-900 mb-2">Reset Sistem</h3>
+            <p className="text-red-700/70 text-sm mb-6 leading-relaxed">
+              Hapus seluruh data bisnis (transaksi, produk, pelanggan, dll). 
+              <span className="block mt-2 font-bold text-red-700 flex items-center gap-1">
+                <AlertTriangle className="w-3.5 h-3.5" /> Tindakan ini tidak dapat dibatalkan!
+              </span>
+            </p>
+            <button
+              onClick={handleResetSystem}
+              disabled={loading}
+              className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold transition-all duration-200 ${
+                loading 
+                  ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
+                  : 'bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-200'
+              }`}
+            >
+              {loading ? (
+                <RefreshCcw className="w-4 h-4 animate-spin" />
+              ) : (
+                <Trash2 className="w-4 h-4" />
+              )}
+              {loading ? 'Memproses...' : 'Hapus Semua Data'}
+            </button>
           </div>
         </div>
       </div>

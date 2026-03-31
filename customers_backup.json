@@ -1,0 +1,1782 @@
+[
+  {
+    "id": 101,
+    "bookCode": "U-02",
+    "name": "SUMADIN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.319Z"
+  },
+  {
+    "id": 102,
+    "bookCode": "U-04",
+    "name": "UST. AGUS",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.326Z"
+  },
+  {
+    "id": 103,
+    "bookCode": "U-07",
+    "name": "ANASTASIA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.329Z"
+  },
+  {
+    "id": 104,
+    "bookCode": "U-08",
+    "name": "YOSEP",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.333Z"
+  },
+  {
+    "id": 105,
+    "bookCode": "U-09",
+    "name": "NURLINA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.336Z"
+  },
+  {
+    "id": 106,
+    "bookCode": "U-13",
+    "name": "ANI RIJAL",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.339Z"
+  },
+  {
+    "id": 107,
+    "bookCode": "U-14",
+    "name": "ANDI PALLAWA GAU",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.342Z"
+  },
+  {
+    "id": 108,
+    "bookCode": "U-15",
+    "name": "YANTI YUNINGSIH",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.346Z"
+  },
+  {
+    "id": 109,
+    "bookCode": "U-16",
+    "name": "NURU MAMA NURMIN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.349Z"
+  },
+  {
+    "id": 110,
+    "bookCode": "U-17",
+    "name": "ATI MAMA HUSNUL",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.352Z"
+  },
+  {
+    "id": 111,
+    "bookCode": "U-21",
+    "name": "MAMA MUMUN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.355Z"
+  },
+  {
+    "id": 112,
+    "bookCode": "U-25",
+    "name": "PETTA BUNGA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.358Z"
+  },
+  {
+    "id": 113,
+    "bookCode": "U-27",
+    "name": "EKA BAPAK AGUS",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.361Z"
+  },
+  {
+    "id": 114,
+    "bookCode": "U-28",
+    "name": "KARTINI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.364Z"
+  },
+  {
+    "id": 115,
+    "bookCode": "U-29",
+    "name": "BURHAN BAPAK ILHAM",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.367Z"
+  },
+  {
+    "id": 116,
+    "bookCode": "U-33",
+    "name": "INTINK",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.370Z"
+  },
+  {
+    "id": 117,
+    "bookCode": "U-35",
+    "name": "NELI IPAR PAL IWAN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.372Z"
+  },
+  {
+    "id": 118,
+    "bookCode": "U-36",
+    "name": "YURI MEI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.374Z"
+  },
+  {
+    "id": 119,
+    "bookCode": "U-42",
+    "name": "AGUSTRIAYANTO",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.377Z"
+  },
+  {
+    "id": 120,
+    "bookCode": "U-43",
+    "name": "DEWI RATNA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.379Z"
+  },
+  {
+    "id": 121,
+    "bookCode": "U-46",
+    "name": "DEWI PUTRA MM SERLIN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.382Z"
+  },
+  {
+    "id": 122,
+    "bookCode": "U-49",
+    "name": "INDRI MM QUIN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.386Z"
+  },
+  {
+    "id": 123,
+    "bookCode": "U-55",
+    "name": "SUNARTI MM OCANG",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.389Z"
+  },
+  {
+    "id": 124,
+    "bookCode": "U-58",
+    "name": "SITI SAMSIA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.392Z"
+  },
+  {
+    "id": 125,
+    "bookCode": "U-59",
+    "name": "NASIRA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.394Z"
+  },
+  {
+    "id": 126,
+    "bookCode": "U-62",
+    "name": "HASAN ANDI BIDING",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.397Z"
+  },
+  {
+    "id": 127,
+    "bookCode": "U-63",
+    "name": "CUCU BPK GION",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.400Z"
+  },
+  {
+    "id": 128,
+    "bookCode": "U-65",
+    "name": "RISNAWATI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.403Z"
+  },
+  {
+    "id": 129,
+    "bookCode": "U-68",
+    "name": "SUYANTO BPK EKO",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.405Z"
+  },
+  {
+    "id": 130,
+    "bookCode": "U-70",
+    "name": "ADRAWATI SUKRI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.407Z"
+  },
+  {
+    "id": 131,
+    "bookCode": "U-71",
+    "name": "SUMARNI MM ANGGI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.410Z"
+  },
+  {
+    "id": 132,
+    "bookCode": "U-72",
+    "name": "HJ KASMA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.412Z"
+  },
+  {
+    "id": 133,
+    "bookCode": "U-73",
+    "name": "ABIDIN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.415Z"
+  },
+  {
+    "id": 134,
+    "bookCode": "U-83",
+    "name": "INTINK",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.419Z"
+  },
+  {
+    "id": 135,
+    "bookCode": "U-84",
+    "name": "MAMA SELFI TOTTI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.422Z"
+  },
+  {
+    "id": 136,
+    "bookCode": "U-85",
+    "name": "HASNA RANU",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.425Z"
+  },
+  {
+    "id": 137,
+    "bookCode": "U-86",
+    "name": "ISRAWATI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.428Z"
+  },
+  {
+    "id": 138,
+    "bookCode": "U-87",
+    "name": "ANA JUM",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.431Z"
+  },
+  {
+    "id": 139,
+    "bookCode": "U-88",
+    "name": "ROSNANI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.434Z"
+  },
+  {
+    "id": 140,
+    "bookCode": "U-93",
+    "name": "EKA MUTMAINNA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.437Z"
+  },
+  {
+    "id": 141,
+    "bookCode": "U-94",
+    "name": "SITI NURMI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.440Z"
+  },
+  {
+    "id": 142,
+    "bookCode": "U-96",
+    "name": "TIKE ASRA SUASA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.443Z"
+  },
+  {
+    "id": 143,
+    "bookCode": "U-99",
+    "name": "HARIYATI MM HANY",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.445Z"
+  },
+  {
+    "id": 144,
+    "bookCode": "U-100",
+    "name": "TURIMAN U100",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.448Z"
+  },
+  {
+    "id": 145,
+    "bookCode": "U-101",
+    "name": "INDRI LABERURU",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.450Z"
+  },
+  {
+    "id": 146,
+    "bookCode": "U-103",
+    "name": "MARIANI MM SAPRI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.453Z"
+  },
+  {
+    "id": 147,
+    "bookCode": "U-104",
+    "name": "UCA ANAK YUNUS",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.455Z"
+  },
+  {
+    "id": 148,
+    "bookCode": "U-105A",
+    "name": "WEL MM LIVIA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.458Z"
+  },
+  {
+    "id": 149,
+    "bookCode": "U-105B",
+    "name": "PAULUS BPK IKA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.460Z"
+  },
+  {
+    "id": 150,
+    "bookCode": "U-105C",
+    "name": "RUSDIN RULLA SSB",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.462Z"
+  },
+  {
+    "id": 151,
+    "bookCode": "U-106",
+    "name": "SEPRI MM SUCI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.465Z"
+  },
+  {
+    "id": 152,
+    "bookCode": "U-107",
+    "name": "ABDUL JALIL BPK WEWE",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.467Z"
+  },
+  {
+    "id": 153,
+    "bookCode": "U-108",
+    "name": "ASWAN INTAN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.469Z"
+  },
+  {
+    "id": 154,
+    "bookCode": "U-109",
+    "name": "RAHIM SARTINA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.472Z"
+  },
+  {
+    "id": 155,
+    "bookCode": "U-111",
+    "name": "HARTON YUKI SOP",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.474Z"
+  },
+  {
+    "id": 156,
+    "bookCode": "U-113",
+    "name": "HASRIN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.477Z"
+  },
+  {
+    "id": 157,
+    "bookCode": "U-114",
+    "name": "SITI HADIJA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.481Z"
+  },
+  {
+    "id": 158,
+    "bookCode": "U-115",
+    "name": "ANDINAR IBU DESA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.483Z"
+  },
+  {
+    "id": 159,
+    "bookCode": "U-118",
+    "name": "HASTIANI MM MELI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.485Z"
+  },
+  {
+    "id": 160,
+    "bookCode": "U-120",
+    "name": "STAMSIAH MM NURUL",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.488Z"
+  },
+  {
+    "id": 161,
+    "bookCode": "U-121",
+    "name": "MARIANTI MM NANDA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.490Z"
+  },
+  {
+    "id": 162,
+    "bookCode": "U-122",
+    "name": "SRI AYU ANANDA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.493Z"
+  },
+  {
+    "id": 163,
+    "bookCode": "U-127",
+    "name": "PUTRI ANDINI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.497Z"
+  },
+  {
+    "id": 164,
+    "bookCode": "U-128",
+    "name": "LINA MM SAHRAN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.499Z"
+  },
+  {
+    "id": 165,
+    "bookCode": "U-129",
+    "name": "RAMADAN BPK SALWA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.502Z"
+  },
+  {
+    "id": 166,
+    "bookCode": "U-130",
+    "name": "REVI SANTI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.504Z"
+  },
+  {
+    "id": 167,
+    "bookCode": "U-131",
+    "name": "MUGAWATI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.507Z"
+  },
+  {
+    "id": 168,
+    "bookCode": "U-132",
+    "name": "SOFYAN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.509Z"
+  },
+  {
+    "id": 169,
+    "bookCode": "U-133",
+    "name": "JUMIATIN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.512Z"
+  },
+  {
+    "id": 170,
+    "bookCode": "U-134",
+    "name": "BEHER BPK IPINK",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.514Z"
+  },
+  {
+    "id": 171,
+    "bookCode": "U-135",
+    "name": "GISA MM NARTO",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.517Z"
+  },
+  {
+    "id": 172,
+    "bookCode": "U-137",
+    "name": "H. LOYMAN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.520Z"
+  },
+  {
+    "id": 173,
+    "bookCode": "U-178",
+    "name": "ISMAIL BENGKEL",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.523Z"
+  },
+  {
+    "id": 174,
+    "bookCode": "U-180",
+    "name": "ALIF BAPAK NOVAL",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.525Z"
+  },
+  {
+    "id": 175,
+    "bookCode": "U-181",
+    "name": "ARFAISAL",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.528Z"
+  },
+  {
+    "id": 176,
+    "bookCode": "U-183",
+    "name": "MULIADIN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.530Z"
+  },
+  {
+    "id": 177,
+    "bookCode": "U-185",
+    "name": "SURYATI MERONDA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.533Z"
+  },
+  {
+    "id": 178,
+    "bookCode": "U-186",
+    "name": "LISRAN L",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.536Z"
+  },
+  {
+    "id": 179,
+    "bookCode": "U-189",
+    "name": "SERAYANTI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.539Z"
+  },
+  {
+    "id": 180,
+    "bookCode": "U-191",
+    "name": "HAMSIA MM RAM",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.542Z"
+  },
+  {
+    "id": 181,
+    "bookCode": "U-192",
+    "name": "RAHIM BPK PENI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.544Z"
+  },
+  {
+    "id": 182,
+    "bookCode": "U-193",
+    "name": "SITI ;ESTARI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.547Z"
+  },
+  {
+    "id": 183,
+    "bookCode": "U-194",
+    "name": "EKA SETIUAWATI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.549Z"
+  },
+  {
+    "id": 184,
+    "bookCode": "U-195",
+    "name": "HASRUDIN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.552Z"
+  },
+  {
+    "id": 185,
+    "bookCode": "U-197",
+    "name": "ERNA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.554Z"
+  },
+  {
+    "id": 186,
+    "bookCode": "U-198",
+    "name": "IRWAN TABARA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.557Z"
+  },
+  {
+    "id": 187,
+    "bookCode": "U-201",
+    "name": "INCE SENNANG",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.559Z"
+  },
+  {
+    "id": 188,
+    "bookCode": "U-202",
+    "name": "AMIR FIRMANSYAH",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.562Z"
+  },
+  {
+    "id": 189,
+    "bookCode": "U-207",
+    "name": "MARIANTI MM NANDA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.564Z"
+  },
+  {
+    "id": 190,
+    "bookCode": "U-208",
+    "name": "NILU SUPARNI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.566Z"
+  },
+  {
+    "id": 191,
+    "bookCode": "U-209",
+    "name": "ROS FARCO",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.569Z"
+  },
+  {
+    "id": 192,
+    "bookCode": "U-210",
+    "name": "MAMA KAYLA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.572Z"
+  },
+  {
+    "id": 193,
+    "bookCode": "U-214",
+    "name": "ANDI SURYA FM",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.575Z"
+  },
+  {
+    "id": 194,
+    "bookCode": "U-215",
+    "name": "WAHIDA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.578Z"
+  },
+  {
+    "id": 195,
+    "bookCode": "U-215B",
+    "name": "EVA MM ARYA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.580Z"
+  },
+  {
+    "id": 196,
+    "bookCode": "U-221",
+    "name": "BIDIN TENTARA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.583Z"
+  },
+  {
+    "id": 197,
+    "bookCode": "U-222",
+    "name": "KAKAK INDY",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.585Z"
+  },
+  {
+    "id": 198,
+    "bookCode": "U-223",
+    "name": "HJ NABANG",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.588Z"
+  },
+  {
+    "id": 199,
+    "bookCode": "U-225",
+    "name": "A,SRIPUDDIN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.590Z"
+  },
+  {
+    "id": 200,
+    "bookCode": "U-226",
+    "name": "JUMRIANI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:35:31.592Z"
+  },
+  {
+    "id": 201,
+    "bookCode": "W-01",
+    "name": "ARFANDI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.617Z"
+  },
+  {
+    "id": 202,
+    "bookCode": "W-02",
+    "name": "NANA MMA SAKTI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.628Z"
+  },
+  {
+    "id": 203,
+    "bookCode": "W-03",
+    "name": "KASMAWATI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.631Z"
+  },
+  {
+    "id": 204,
+    "bookCode": "W-04",
+    "name": "NARDIN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.634Z"
+  },
+  {
+    "id": 205,
+    "bookCode": "W-06",
+    "name": "SYARIFUDDIN HDYTLH",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.637Z"
+  },
+  {
+    "id": 206,
+    "bookCode": "W-08",
+    "name": "INDAH MAMA PUPUT",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.640Z"
+  },
+  {
+    "id": 207,
+    "bookCode": "W-09",
+    "name": "ABDUL KHALIK",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.643Z"
+  },
+  {
+    "id": 208,
+    "bookCode": "W-10",
+    "name": "MIHARDIN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.647Z"
+  },
+  {
+    "id": 209,
+    "bookCode": "W-11",
+    "name": "RISNA MAMA SAHRIL",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.649Z"
+  },
+  {
+    "id": 210,
+    "bookCode": "W-16",
+    "name": "YULI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.657Z"
+  },
+  {
+    "id": 211,
+    "bookCode": "W-18",
+    "name": "BAPAK BOO",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.662Z"
+  },
+  {
+    "id": 212,
+    "bookCode": "W-19",
+    "name": "UNAAHA FC",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.666Z"
+  },
+  {
+    "id": 213,
+    "bookCode": "W-69",
+    "name": "UNAAHA FC",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.670Z"
+  },
+  {
+    "id": 214,
+    "bookCode": "W-20",
+    "name": "SUTRISNO",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.673Z"
+  },
+  {
+    "id": 215,
+    "bookCode": "W-21",
+    "name": "FITRIA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.676Z"
+  },
+  {
+    "id": 216,
+    "bookCode": "W-22",
+    "name": "MAMAT BAPAK MIA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.679Z"
+  },
+  {
+    "id": 217,
+    "bookCode": "W-23",
+    "name": "DARNA/ADRAWATI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.682Z"
+  },
+  {
+    "id": 218,
+    "bookCode": "W-24",
+    "name": "ANDI MUSNAWIR",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.685Z"
+  },
+  {
+    "id": 219,
+    "bookCode": "W-26",
+    "name": "VIDYA MEHANTOW",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.689Z"
+  },
+  {
+    "id": 220,
+    "bookCode": "W-27",
+    "name": "NASIRA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.692Z"
+  },
+  {
+    "id": 221,
+    "bookCode": "W-28",
+    "name": "ANDI ANWAR",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.695Z"
+  },
+  {
+    "id": 222,
+    "bookCode": "W-30",
+    "name": "MARDIMAN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.698Z"
+  },
+  {
+    "id": 223,
+    "bookCode": "W-31",
+    "name": "ROS MAMA ANTO",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.700Z"
+  },
+  {
+    "id": 224,
+    "bookCode": "W-34",
+    "name": "PIPIN/ IDAWATI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.703Z"
+  },
+  {
+    "id": 225,
+    "bookCode": "W-35",
+    "name": "MIKI/PIPIN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.707Z"
+  },
+  {
+    "id": 226,
+    "bookCode": "W-36",
+    "name": "ALIRA MAMA ENI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.710Z"
+  },
+  {
+    "id": 227,
+    "bookCode": "W-40",
+    "name": "HJ, NURSAEDAH",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.712Z"
+  },
+  {
+    "id": 228,
+    "bookCode": "W-41",
+    "name": "RIOBI DARWIN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.715Z"
+  },
+  {
+    "id": 229,
+    "bookCode": "W-42",
+    "name": "AHMAD IMANUDDIN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.718Z"
+  },
+  {
+    "id": 230,
+    "bookCode": "W-45",
+    "name": "BAPAK BOO",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.721Z"
+  },
+  {
+    "id": 231,
+    "bookCode": "W-46",
+    "name": "KETRIN - MM KAILA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.723Z"
+  },
+  {
+    "id": 232,
+    "bookCode": "W-47",
+    "name": "LISNAWATI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.726Z"
+  },
+  {
+    "id": 233,
+    "bookCode": "W-48",
+    "name": "PUDING ALANG AMALI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.729Z"
+  },
+  {
+    "id": 234,
+    "bookCode": "W-49",
+    "name": "IKHWAL",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.731Z"
+  },
+  {
+    "id": 235,
+    "bookCode": "W-50",
+    "name": "YUSRADI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.734Z"
+  },
+  {
+    "id": 236,
+    "bookCode": "W-51",
+    "name": "MBG PIPIN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.736Z"
+  },
+  {
+    "id": 237,
+    "bookCode": "W-52",
+    "name": "YULI - MAMA ETI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.739Z"
+  },
+  {
+    "id": 238,
+    "bookCode": "W-53",
+    "name": "PIALIN/ PUAHADI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.741Z"
+  },
+  {
+    "id": 239,
+    "bookCode": "W-54",
+    "name": "KASMIRA/ MM FATMA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.744Z"
+  },
+  {
+    "id": 240,
+    "bookCode": "W-55",
+    "name": "RIJAL",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.746Z"
+  },
+  {
+    "id": 241,
+    "bookCode": "W-56",
+    "name": "SUPRIHATIN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.748Z"
+  },
+  {
+    "id": 242,
+    "bookCode": "W-57",
+    "name": "RISKI MANDIRI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.750Z"
+  },
+  {
+    "id": 243,
+    "bookCode": "W-58",
+    "name": "HASNA MAMA CITRA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.753Z"
+  },
+  {
+    "id": 244,
+    "bookCode": "W-60",
+    "name": "AISYA MINI MAMA PRIAN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.756Z"
+  },
+  {
+    "id": 245,
+    "bookCode": "W-61",
+    "name": "RISNA MM MARSA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.758Z"
+  },
+  {
+    "id": 246,
+    "bookCode": "W-62",
+    "name": "IIN HARIYATI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.761Z"
+  },
+  {
+    "id": 247,
+    "bookCode": "W-63",
+    "name": "ANDI ISKANDAR",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.763Z"
+  },
+  {
+    "id": 248,
+    "bookCode": "W-64",
+    "name": "LUKMAN BAPK IRMA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.766Z"
+  },
+  {
+    "id": 249,
+    "bookCode": "W-65",
+    "name": "ERIK PSSI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.769Z"
+  },
+  {
+    "id": 250,
+    "bookCode": "W-66",
+    "name": "SYAWAL 2",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.772Z"
+  },
+  {
+    "id": 251,
+    "bookCode": "W-67",
+    "name": "TAM SATI TAM",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.774Z"
+  },
+  {
+    "id": 252,
+    "bookCode": "W-68",
+    "name": "MUTTALIB",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.777Z"
+  },
+  {
+    "id": 253,
+    "bookCode": "W-70",
+    "name": "CILONG",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.780Z"
+  },
+  {
+    "id": 254,
+    "bookCode": "W-72",
+    "name": "ASRUL NAPAK AL",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.783Z"
+  },
+  {
+    "id": 255,
+    "bookCode": "W-73",
+    "name": "ASRIADI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.785Z"
+  },
+  {
+    "id": 256,
+    "bookCode": "W-74",
+    "name": "JUMRAN BPK KHALIK",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.788Z"
+  },
+  {
+    "id": 257,
+    "bookCode": "W-75",
+    "name": "KOMANG MURTI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.790Z"
+  },
+  {
+    "id": 258,
+    "bookCode": "W-77",
+    "name": "JURANDA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.793Z"
+  },
+  {
+    "id": 259,
+    "bookCode": "W-78",
+    "name": "INTINK",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.796Z"
+  },
+  {
+    "id": 260,
+    "bookCode": "W-79",
+    "name": "ANDI EVI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.798Z"
+  },
+  {
+    "id": 261,
+    "bookCode": "W-79A",
+    "name": "JULIATIN YULI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.801Z"
+  },
+  {
+    "id": 262,
+    "bookCode": "W-80",
+    "name": "DARMA/MAMA DARMA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.804Z"
+  },
+  {
+    "id": 263,
+    "bookCode": "W-81",
+    "name": "HJ. JUMRIATIN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.808Z"
+  },
+  {
+    "id": 264,
+    "bookCode": "W-82",
+    "name": "REMON KKSS",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.811Z"
+  },
+  {
+    "id": 265,
+    "bookCode": "W-83",
+    "name": "SAFAR BAPAK SINAR",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.813Z"
+  },
+  {
+    "id": 266,
+    "bookCode": "W-85",
+    "name": "MURNIATIN",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.816Z"
+  },
+  {
+    "id": 267,
+    "bookCode": "W-85",
+    "name": "ABU SANIFAH",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.819Z"
+  },
+  {
+    "id": 268,
+    "bookCode": "W-86",
+    "name": "IBU KADEK",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.823Z"
+  },
+  {
+    "id": 269,
+    "bookCode": "W-87",
+    "name": "SAMIUN BAPAK FAJAR",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.826Z"
+  },
+  {
+    "id": 270,
+    "bookCode": "W-88",
+    "name": "SALIM",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.830Z"
+  },
+  {
+    "id": 271,
+    "bookCode": "W-89",
+    "name": "MUH LUBIS",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.832Z"
+  },
+  {
+    "id": 272,
+    "bookCode": "W-91",
+    "name": "ANDI NAWA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.835Z"
+  },
+  {
+    "id": 273,
+    "bookCode": "W-92",
+    "name": "DASRI BAPAK RIRI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.838Z"
+  },
+  {
+    "id": 274,
+    "bookCode": "W-93",
+    "name": "SAKMIAH",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.840Z"
+  },
+  {
+    "id": 275,
+    "bookCode": "W-94",
+    "name": "MAWARNI/ MAM TIWI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.842Z"
+  },
+  {
+    "id": 276,
+    "bookCode": "W-95",
+    "name": "SAMSUDIN BPK AZRA",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.845Z"
+  },
+  {
+    "id": 277,
+    "bookCode": "W-116",
+    "name": "ANISA ANAKNYA SIRAYANTI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.848Z"
+  },
+  {
+    "id": 278,
+    "bookCode": "W-135",
+    "name": "KIKI REZKI",
+    "creditDate": null,
+    "item": null,
+    "itemPrice": null,
+    "monthlyInstallment": null,
+    "createdAt": "2026-03-31T03:53:47.851Z"
+  }
+]

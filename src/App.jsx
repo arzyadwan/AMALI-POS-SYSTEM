@@ -7,6 +7,7 @@ import SimulatorPage from './pages/SimulatorPage'
 import ProductsPage from './pages/ProductsPage'
 import CustomersPage from './pages/CustomersPage'
 import TransactionsPage from './pages/TransactionsPage'
+import TransactionDetailPage from './pages/TransactionDetailPage'
 import CollectionPage from './pages/CollectionPage'
 import AnalyticsPage from './pages/AnalyticsPage'
 import SuppliersPage from './pages/SuppliersPage'
@@ -38,6 +39,11 @@ export default function App() {
       <Route path="/transactions" element={
         <ProtectedRoute>
           <Layout><TransactionsPage /></Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/transactions/detail/:id" element={
+        <ProtectedRoute>
+          <Layout><TransactionDetailPage /></Layout>
         </ProtectedRoute>
       } />
 
@@ -74,7 +80,7 @@ export default function App() {
       } />
 
 
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   )
 }

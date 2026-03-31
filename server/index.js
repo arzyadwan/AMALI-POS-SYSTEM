@@ -85,6 +85,45 @@ app.get('/api/categories', async (req, res) => {
   res.json(categories)
 })
 
+app.post('/api/categories', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const { name, icon } = req.body
+    const category = await prisma.category.create({
+      data: { name, icon: icon || 'Package' }
+    })
+    res.status(201).json(category)
+  } catch (err) {
+    res.status(400).json({ error: err.message })
+  }
+})
+
+app.put('/api/categories/:id', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const { name, icon } = req.body
+    const category = await prisma.category.update({
+      where: { id: parseInt(req.params.id) },
+      data: { name, icon }
+    })
+    res.json(category)
+  } catch (err) {
+    res.status(400).json({ error: err.message })
+  }
+})
+
+app.delete('/api/categories/:id', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const id = parseInt(req.params.id)
+    const count = await prisma.product.count({ where: { categoryId: id } })
+    if (count > 0) {
+      return res.status(400).json({ error: 'Kategori tidak dapat dihapus karena masih memiliki produk.' })
+    }
+    await prisma.category.delete({ where: { id } })
+    res.json({ message: 'Category deleted' })
+  } catch (err) {
+    res.status(400).json({ error: err.message })
+  }
+})
+
 // ============ PRODUCTS ============
 app.get('/api/products', async (req, res) => {
   const { search, categoryId } = req.query
@@ -153,21 +192,69 @@ app.delete('/api/products/:id', async (req, res) => {
 
 // ============ CUSTOMERS ============
 app.get('/api/customers', async (req, res) => {
-  const { search } = req.query
-  const where = {}
-  if (search) {
-    where.OR = [
-      { name: { contains: search } },
-      { phone: { contains: search } },
-      { nik: { contains: search } }
-    ]
+  const { search, sortBy, order = 'asc', filter, batch } = req.query
+  const andConditions = []
+
+  // Filter Logic
+  if (filter === 'active_credit') {
+    andConditions.push({ transactions: { some: { type: 'CREDIT' } } })
+  } else if (filter === 'no_credit') {
+    andConditions.push({ transactions: { none: {} } })
   }
-  const customers = await prisma.customer.findMany({
-    where,
-    include: { _count: { select: { transactions: true } } },
-    orderBy: { name: 'asc' }
-  })
-  res.json(customers)
+
+  // Batch Filter (U, W, etc)
+  if (batch) {
+    andConditions.push({ 
+      transactions: { 
+        some: { 
+          bookCode: { startsWith: batch } 
+        } 
+      } 
+    })
+  }
+
+  // Search Logic
+  if (search) {
+    andConditions.push({
+      OR: [
+        { name: { contains: search } },
+        { phone: { contains: search } },
+        { address: { contains: search } },
+        { transactions: { some: { bookCode: { contains: search } } } },
+        { transactions: { some: { itemName: { contains: search } } } }
+      ]
+    })
+  }
+
+  const where = andConditions.length > 0 ? { AND: andConditions } : {}
+
+  // Sorting Logic
+  let orderBy = { name: 'asc' }
+  const direction = order === 'desc' ? 'desc' : 'asc'
+  
+  if (sortBy === 'name') orderBy = { name: direction }
+  else if (sortBy === 'address') orderBy = { address: direction }
+  else if (sortBy === 'phone') orderBy = { phone: direction }
+  else if (sortBy === 'transactions') orderBy = { transactions: { _count: direction } }
+  else if (sortBy === 'newest') orderBy = { createdAt: 'desc' }
+
+  try {
+    const customers = await prisma.customer.findMany({
+      where,
+      include: { 
+        transactions: {
+          where: { type: 'CREDIT' },
+          orderBy: { createdAt: 'desc' }
+        },
+        _count: { select: { transactions: true } } 
+      },
+      orderBy
+    })
+    res.json(customers)
+  } catch (err) {
+    console.error('Customer Fetch Error:', err)
+    res.status(500).json({ error: 'Failed to fetch customers' })
+  }
 })
 
 app.post('/api/customers', async (req, res) => {
@@ -265,6 +352,54 @@ app.get('/api/transactions', async (req, res) => {
   })
   
   res.json(transactions)
+})
+
+app.get('/api/transactions/:id', async (req, res) => {
+  try {
+    const transaction = await prisma.transaction.findUnique({
+      where: { id: parseInt(req.params.id) },
+      include: {
+        customer: true,
+        items: { include: { product: true } },
+        installments: { orderBy: { monthIndex: 'asc' } }
+      }
+    })
+    
+    if (!transaction) return res.status(404).json({ error: 'Transaction not found' })
+    res.json(transaction)
+  } catch (err) {
+    res.status(400).json({ error: err.message })
+  }
+})
+
+app.put('/api/transactions/:id', async (req, res) => {
+  try {
+    const { bookCode, itemName, totalPrice, monthlyPayment, tenor, status, startDate } = req.body
+    const transaction = await prisma.transaction.update({
+      where: { id: parseInt(req.params.id) },
+      data: { 
+        bookCode, 
+        itemName, 
+        totalPrice: parseFloat(totalPrice),
+        monthlyPayment: parseFloat(monthlyPayment),
+        tenor: parseInt(tenor),
+        status,
+        startDate: startDate ? new Date(startDate) : undefined
+      }
+    })
+    res.json(transaction)
+  } catch (err) {
+    res.status(400).json({ error: err.message })
+  }
+})
+
+app.delete('/api/transactions/:id', async (req, res) => {
+  try {
+    await prisma.transaction.delete({ where: { id: parseInt(req.params.id) } })
+    res.json({ message: 'Transaction deleted' })
+  } catch (err) {
+    res.status(400).json({ error: err.message })
+  }
 })
 
 app.post('/api/transactions', async (req, res) => {
@@ -437,6 +572,54 @@ app.post('/api/installments', async (req, res) => {
     }
 
     res.status(201).json({ ...lastProcessedInstallment, lateFee: totalLateFee, finished: remainingCount === 0 })
+  } catch (err) {
+    res.status(400).json({ error: err.message })
+  }
+})
+
+app.post('/api/installments/manual', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const { transactionId, amount, dueDate, monthIndex, status, paymentDate } = req.body
+    const installment = await prisma.installment.create({
+      data: {
+        transactionId: parseInt(transactionId),
+        amount: parseFloat(amount),
+        dueDate: new Date(dueDate),
+        monthIndex: parseInt(monthIndex),
+        status: status || 'PENDING',
+        paymentDate: paymentDate ? new Date(paymentDate) : null
+      }
+    })
+    res.status(201).json(installment)
+  } catch (err) {
+    res.status(400).json({ error: err.message })
+  }
+})
+
+app.put('/api/installments/:id', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const { amount, dueDate, monthIndex, status, paymentDate } = req.body
+    const id = parseInt(req.params.id)
+    const installment = await prisma.installment.update({
+      where: { id },
+      data: {
+        amount: amount !== undefined ? parseFloat(amount) : undefined,
+        dueDate: dueDate ? new Date(dueDate) : undefined,
+        monthIndex: monthIndex !== undefined ? parseInt(monthIndex) : undefined,
+        status,
+        paymentDate: paymentDate ? new Date(paymentDate) : (status === 'PAID' ? new Date() : null)
+      }
+    })
+    res.json(installment)
+  } catch (err) {
+    res.status(400).json({ error: err.message })
+  }
+})
+
+app.delete('/api/installments/:id', verifyToken, isAdmin, async (req, res) => {
+  try {
+    await prisma.installment.delete({ where: { id: parseInt(req.params.id) } })
+    res.json({ message: 'Installment deleted' })
   } catch (err) {
     res.status(400).json({ error: err.message })
   }
@@ -633,6 +816,40 @@ app.post('/api/auth/setup', async (req, res) => {
     res.json({ token, user: { id: user.id, username: user.username, name: user.name, role: user.role } })
   } catch (e) {
     res.status(500).json({ error: e.message })
+  }
+})
+
+// ============ SYSTEM MANAGEMENT ============
+app.post('/api/system/reset', verifyToken, isAdmin, async (req, res) => {
+  try {
+    console.log(`[${new Date().toISOString()}] SYSTEM RESET REQUEST by ${req.user.username}`)
+    
+    // Perform reset in a transaction to ensure atomic deletion
+    await prisma.$transaction([
+      prisma.installment.deleteMany(),
+      prisma.transactionItem.deleteMany(),
+      prisma.transaction.deleteMany(),
+      prisma.product.deleteMany(),
+      prisma.customer.deleteMany(),
+      prisma.supplier.deleteMany(),
+      prisma.category.deleteMany(),
+    ])
+
+    // Try to delete debug log if exists
+    const logPath = path.resolve(__dirname, '..', 'transaction_debug.log')
+    if (fs.existsSync(logPath)) {
+      try {
+        fs.unlinkSync(logPath)
+      } catch (err) {
+        console.error('Failed to delete log file:', err)
+      }
+    }
+
+    console.log('System reset successful')
+    res.json({ success: true, message: 'Seluruh data (kecuali akun pengguna) telah berhasil dihapus.' })
+  } catch (e) {
+    console.error('System reset failed:', e)
+    res.status(500).json({ error: 'Gagal melakukan reset sistem: ' + e.message })
   }
 })
 

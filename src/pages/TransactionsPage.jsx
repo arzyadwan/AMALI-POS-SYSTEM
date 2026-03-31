@@ -142,7 +142,10 @@ export default function TransactionsPage() {
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-0.5">
-                      <p className="text-sm font-semibold text-slate-900">TRX-{String(tx.id).padStart(4, '0')}</p>
+                      <p className="text-sm font-semibold text-slate-900">
+                        {tx.bookCode ? <span className="bg-primary-600 text-white px-2 py-0.5 rounded text-[10px] mr-2">{tx.bookCode}</span> : null}
+                        TRX-{String(tx.id).padStart(4, '0')}
+                      </p>
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                         tx.type === 'CASH'
                           ? 'bg-emerald-50 text-emerald-600'
@@ -157,7 +160,7 @@ export default function TransactionsPage() {
                       )}
                     </div>
                     <p className="text-[11px] text-slate-500">
-                      {tx.customer?.name || 'Pelanggan Umum'} • {formatShortDate(tx.createdAt)}
+                      {tx.customer?.name || 'Pelanggan Umum'} • {tx.itemName || (tx.items?.length > 0 ? tx.items[0].product.name : 'Produk')} • {formatShortDate(tx.createdAt)}
                     </p>
                   </div>
                 </div>
