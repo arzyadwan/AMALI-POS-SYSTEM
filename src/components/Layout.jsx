@@ -1,18 +1,18 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { 
-  ShoppingCart, Calculator, Package, Users, Receipt, Shield, LogOut, 
-  AlertTriangle, BarChart3, Truck, Settings, Menu, X 
+import { ShoppingCart, Calculator, Package, Users, Receipt, Shield, LogOut, 
+  AlertTriangle, BarChart3, Truck, Settings, Menu, X, LogIn, ShieldCheck, User as UserIcon, Lock, AlertCircle, CheckCircle2 
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
 export default function Layout({ children }) {
   const location = useLocation()
   const navigate = useNavigate()
-  const { user, logout, isAdmin } = useAuth()
+  const { user, login, logout, isAdmin } = useAuth()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
 
-  const navItems = [
+  const navItems = user ? [
     { path: '/', label: 'Kasir POS', icon: ShoppingCart },
     { path: '/simulator', label: 'Simulator Kredit', icon: Calculator },
     { path: '/customers', label: 'Pelanggan', icon: Users },
@@ -26,18 +26,22 @@ export default function Layout({ children }) {
       { path: '/users', label: 'Pengguna', icon: Shield, adminTag: true },
       { path: '/settings', label: 'Pengaturan', icon: Settings, adminTag: true },
     ] : [])
+  ] : [
+    { path: '/', label: 'Simulator Kredit', icon: Calculator },
   ]
 
-  const bottomNavItems = [
+  const bottomNavItems = user ? [
     { path: '/', icon: ShoppingCart, label: 'Kasir' },
     { path: '/simulator', icon: Calculator, label: 'Kredit' },
     { path: '/transactions', icon: Receipt, label: 'History' },
     { path: '/customers', icon: Users, label: 'Data' },
+  ] : [
+    { path: '/', icon: Calculator, label: 'Simulator' },
   ]
 
   function handleLogout() {
     logout()
-    navigate('/login')
+    navigate('/')
   }
 
   return (
@@ -50,12 +54,23 @@ export default function Layout({ children }) {
           </div>
           <span className="font-bold text-slate-900 text-base">AMALI <span className="text-primary-600">KREDIT</span></span>
         </div>
-        <button 
-          onClick={() => setIsSidebarOpen(true)}
-          className="p-2 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors"
-        >
-          <Menu className="w-6 h-6" />
-        </button>
+        <div className="flex items-center gap-2">
+          {!user && (
+            <button 
+              onClick={() => setIsLoginModalOpen(true)}
+              className="p-2 text-primary-600 hover:bg-primary-50 rounded-lg transition-colors flex items-center gap-1.5"
+            >
+              <LogIn className="w-5 h-5" />
+              <span className="text-xs font-bold">Login</span>
+            </button>
+          )}
+          <button 
+            onClick={() => setIsSidebarOpen(true)}
+            className="p-2 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors"
+          >
+            <Menu className="w-6 h-6" />
+          </button>
+        </div>
       </header>
 
       {/* Sidebar Overlay (Mobile Only) */}
@@ -124,7 +139,7 @@ export default function Layout({ children }) {
 
         {/* User Info & Logout */}
         <div className="p-4 border-t border-slate-100 space-y-3 pb-safe-bottom">
-          {user && (
+          {user ? (
             <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${
                 isAdmin ? 'bg-red-100 text-red-600' : 'bg-emerald-100 text-emerald-700'
@@ -145,6 +160,14 @@ export default function Layout({ children }) {
                 <LogOut className="w-3.5 h-3.5" />
               </button>
             </div>
+          ) : (
+            <button
+              onClick={() => setIsLoginModalOpen(true)}
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-primary-600 text-white font-bold text-sm hover:bg-primary-700 transition-all shadow-md shadow-primary-200 active:scale-[0.98]"
+            >
+              <LogIn className="w-4 h-4" />
+              MASUK KE SISTEM
+            </button>
           )}
           <div className="text-center hidden lg:block">
             <p className="text-[10px] text-slate-400">
@@ -180,6 +203,160 @@ export default function Layout({ children }) {
           )
         })}
       </nav>
+
+      {/* Login Modal */}
+      {isLoginModalOpen && (
+        <LoginModal 
+          onClose={() => setIsLoginModalOpen(false)} 
+          onSuccess={() => {
+            setIsLoginModalOpen(false)
+            navigate('/')
+          }}
+        />
+      )}
+    </div>
+  )
+}
+
+function LoginModal({ onClose, onSuccess }) {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [needsSetup, setNeedsSetup] = useState(false)
+  const [setupName, setSetupName] = useState('')
+  
+  const { login } = useAuth()
+
+  useEffect(() => {
+    fetch('/api/auth/check-setup')
+      .then(r => r.json())
+      .then(d => setNeedsSetup(d.needsSetup))
+      .catch(() => setNeedsSetup(false))
+  }, [])
+
+  async function handleAction(e) {
+    e.preventDefault()
+    setError('')
+    setIsLoading(true)
+    
+    const url = needsSetup ? '/api/auth/setup' : '/api/auth/login'
+    const body = needsSetup 
+      ? { username, password, name: setupName }
+      : { username, password }
+
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error)
+      
+      login(data.user, data.token)
+      onSuccess()
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+      <div 
+        className="bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden animate-scaleIn relative"
+        onClick={e => e.stopPropagation()}
+      >
+        <button 
+          onClick={onClose}
+          className="absolute right-4 top-4 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        <div className="p-8">
+          <div className="text-center mb-6">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary-50 mb-4">
+              <ShieldCheck className="w-7 h-7 text-primary-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900">
+              {needsSetup ? '🛡️ Setup Admin' : 'Masuk ke Sistem'}
+            </h2>
+            <p className="text-sm text-slate-500 mt-1">
+              {needsSetup ? 'Buat akun admin pertama Anda.' : 'Gunakan akun Kasir atau Admin.'}
+            </p>
+          </div>
+
+          <form onSubmit={handleAction} className="space-y-4">
+            {needsSetup && (
+              <div className="space-y-1.5">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Nama Lengkap</label>
+                <div className="relative">
+                  <UserIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <input
+                    type="text"
+                    required
+                    className="input-modern pl-10"
+                    placeholder="Nama Anda"
+                    value={setupName}
+                    onChange={e => setSetupName(e.target.value)}
+                  />
+                </div>
+              </div>
+            )}
+            
+            <div className="space-y-1.5">
+              <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Username</label>
+              <div className="relative">
+                <UserIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  type="text"
+                  required
+                  className="input-modern pl-10"
+                  placeholder="Username"
+                  value={username}
+                  onChange={e => setUsername(e.target.value)}
+                  autoFocus
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Password</label>
+              <div className="relative">
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  type="password"
+                  required
+                  className="input-modern pl-10"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {error && (
+              <div className="flex items-center gap-2 p-3 rounded-xl bg-red-50 border border-red-100 text-red-600 text-sm animate-shake">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <p>{error}</p>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-primary-600 text-white font-bold py-3.5 rounded-2xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-200 active:scale-[0.98] disabled:opacity-50 mt-2"
+            >
+              {isLoading ? 'Memproses...' : needsSetup ? 'BUAT AKUN' : ' MASUK SEKARANG'}
+            </button>
+          </form>
+          
+          <p className="text-center text-[10px] text-slate-400 mt-6 font-medium"> AMALI KREDIT v2.0 - © 2026 </p>
+        </div>
+      </div>
     </div>
   )
 }

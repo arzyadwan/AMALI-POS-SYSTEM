@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
-import LoginPage from './pages/LoginPage'
 import POSPage from './pages/POSPage'
 import SimulatorPage from './pages/SimulatorPage'
 import ProductsPage from './pages/ProductsPage'
@@ -13,24 +12,26 @@ import AnalyticsPage from './pages/AnalyticsPage'
 import SuppliersPage from './pages/SuppliersPage'
 import UsersPage from './pages/UsersPage'
 import SettingsPage from './pages/SettingsPage'
+import { useAuth } from './context/AuthContext'
 
 export default function App() {
+  const { user } = useAuth()
+
   return (
     <Routes>
+      {/* Root - Conditional based on login */}
+      <Route path="/" element={
+        <Layout>
+          {user ? <POSPage /> : <SimulatorPage />}
+        </Layout>
+      } />
+
       {/* Public */}
-      <Route path="/login" element={<LoginPage />} />
+      <Route path="/simulator" element={
+        <Layout><SimulatorPage /></Layout>
+      } />
 
       {/* Protected - all roles */}
-      <Route path="/" element={
-        <ProtectedRoute>
-          <Layout><POSPage /></Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/simulator" element={
-        <ProtectedRoute>
-          <Layout><SimulatorPage /></Layout>
-        </ProtectedRoute>
-      } />
       <Route path="/customers" element={
         <ProtectedRoute>
           <Layout><CustomersPage /></Layout>
@@ -80,7 +81,7 @@ export default function App() {
       } />
 
 
-      <Route path="*" element={<Navigate to="/login" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }
