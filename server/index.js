@@ -33,8 +33,15 @@ function verifyToken(req, res, next) {
 }
 
 function isAdmin(req, res, next) {
-  if (req.user?.role !== 'ADMIN') {
+  if (req.user?.role !== 'ADMIN' && req.user?.role !== 'SUPER ADMIN') {
     return res.status(403).json({ error: 'Akses ditolak. Hanya Admin yang diizinkan.' })
+  }
+  next()
+}
+
+function isSuperAdmin(req, res, next) {
+  if (req.user?.role !== 'SUPER ADMIN') {
+    return res.status(403).json({ error: 'Akses ditolak. Hanya Super Admin yang diizinkan.' })
   }
   next()
 }
@@ -278,7 +285,7 @@ app.put('/api/customers/:id', async (req, res) => {
   }
 })
 
-app.delete('/api/customers/:id', async (req, res) => {
+app.delete('/api/customers/:id', verifyToken, isSuperAdmin, async (req, res) => {
   try {
     await prisma.customer.delete({ where: { id: parseInt(req.params.id) } })
     res.json({ message: 'Customer deleted' })
@@ -393,7 +400,7 @@ app.put('/api/transactions/:id', async (req, res) => {
   }
 })
 
-app.delete('/api/transactions/:id', async (req, res) => {
+app.delete('/api/transactions/:id', verifyToken, isSuperAdmin, async (req, res) => {
   try {
     await prisma.transaction.delete({ where: { id: parseInt(req.params.id) } })
     res.json({ message: 'Transaction deleted' })
@@ -486,6 +493,61 @@ app.post('/api/transactions', async (req, res) => {
         }
       }
 
+      return trx
+    })
+
+    res.status(201).json(transaction)
+  } catch (err) {
+    res.status(400).json({ error: err.message })
+  }
+})
+
+app.post('/api/transactions/manual', async (req, res) => {
+  try {
+    const { 
+      customerId, 
+      itemName, 
+      totalPrice, 
+      monthlyPayment, 
+      tenor, 
+      dpAmount, 
+      bookCode, 
+      startDate,
+      status 
+    } = req.body
+
+    const transaction = await prisma.$transaction(async (tx) => {
+      const trx = await tx.transaction.create({
+        data: {
+          customerId: parseInt(customerId),
+          type: 'CREDIT',
+          totalPrice: parseFloat(totalPrice),
+          monthlyPayment: parseFloat(monthlyPayment),
+          totalCredit: parseFloat(monthlyPayment) * parseInt(tenor),
+          tenor: parseInt(tenor),
+          dpAmount: parseFloat(dpAmount || 0),
+          bookCode,
+          itemName,
+          startDate: startDate ? new Date(startDate) : new Date(),
+          status: status || 'ACTIVE'
+        }
+      })
+
+      // Generate installment schedule
+      const baseDate = startDate ? new Date(startDate) : new Date()
+      for (let i = 1; i <= parseInt(tenor); i++) {
+        const dueDate = new Date(baseDate)
+        dueDate.setMonth(dueDate.getMonth() + i)
+        await tx.installment.create({
+          data: {
+            transactionId: trx.id,
+            amount: parseFloat(monthlyPayment),
+            dueDate,
+            monthIndex: i,
+            status: 'PENDING'
+          }
+        })
+      }
       return trx
     })
 

@@ -27,10 +27,11 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('amali_token')
   }, [])
 
-  const isAdmin = user?.role === 'ADMIN'
+  const isAdmin = user?.role === 'ADMIN' || user?.role === 'SUPER ADMIN'
+  const isSuperAdmin = user?.role === 'SUPER ADMIN'
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isAdmin }}>
+    <AuthContext.Provider value={{ user, token, login, logout, isAdmin, isSuperAdmin }}>
       {children}
     </AuthContext.Provider>
   )

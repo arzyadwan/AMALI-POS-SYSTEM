@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Users, Plus, Search, Edit3, X, Check, Phone, MapPin, CreditCard, ChevronRight, Zap } from 'lucide-react'
+import { Users, Plus, Search, Edit3, X, Check, Phone, MapPin, CreditCard, ChevronRight, Zap, Trash2 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
 export default function CustomersPage() {
   const navigate = useNavigate()
-  const { isAdmin } = useAuth()
+  const { isAdmin, isSuperAdmin, token } = useAuth()
   const [customers, setCustomers] = useState([])
   const [search, setSearch] = useState('')
   const [showModal, setShowModal] = useState(false)
@@ -72,30 +72,25 @@ export default function CustomersPage() {
     setShowModal(true)
   }
 
-  const handleSubmit = async () => {
-    if (!form.name) {
-      alert('Nama wajib diisi!')
-      return
-    }
-
-    const payload = form
-
-    if (editCustomer) {
-      await fetch(`/api/customers/${editCustomer.id}`, {
-        method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-      })
-    } else {
-      await fetch('/api/customers', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-      })
-    }
-    setShowModal(false)
-    fetchCustomers()
-  }
-
   const openEditTrx = (e, tx) => {
     e.stopPropagation()
     setEditTrxData({ ...tx })
+    setShowTrxModal(true)
+  }
+
+  const openAddTrx = (e, customer) => {
+    if (e && e.stopPropagation) e.stopPropagation()
+    setEditTrxData({ 
+      customerId: customer.id,
+      bookCode: '',
+      itemName: '',
+      totalPrice: 0,
+      monthlyPayment: 0,
+      tenor: 12,
+      dpAmount: 0,
+      startDate: new Date().toISOString().split('T')[0],
+      status: 'ACTIVE'
+    })
     setShowTrxModal(true)
   }
 
@@ -104,19 +99,96 @@ export default function CustomersPage() {
       alert('Kode buku wajib diisi!')
       return
     }
-    await fetch(`/api/transactions/${editTrxData.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(editTrxData)
-    })
-    setShowTrxModal(false)
+
+    // Ensure totalPrice is calculated correctly before sending
+    const finalData = {
+      ...editTrxData,
+      totalPrice: (parseFloat(editTrxData.monthlyPayment) || 0) * (parseInt(editTrxData.tenor) || 0)
+    }
+
+    const isNew = !editTrxData.id
+    const url = isNew ? '/api/transactions/manual' : `/api/transactions/${editTrxData.id}`
+    const method = isNew ? 'POST' : 'PUT'
+
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(finalData)
+      })
+
+      if (!res.ok) {
+        const err = await res.json()
+        alert('Gagal menyimpan data kredit: ' + (err.error || 'Terjadi kesalahan sistem'))
+        return
+      }
+
+      setShowTrxModal(false)
+      fetchCustomers()
+    } catch (err) {
+      console.error('Error submitting transaction:', err)
+      alert('Terjadi kesalahan jaringan atau server')
+    }
+  }
+
+  const handleSubmit = async (thenAddCredit = false) => {
+    if (!form.name) {
+      alert('Nama wajib diisi!')
+      return
+    }
+
+    const payload = form
+    let savedCustomer = null
+
+    if (editCustomer) {
+      const res = await fetch(`/api/customers/${editCustomer.id}`, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+      })
+      if (res.ok) savedCustomer = await res.json()
+    } else {
+      const res = await fetch('/api/customers', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+      })
+      if (res.ok) savedCustomer = await res.json()
+    }
+
+    setShowModal(false)
     fetchCustomers()
+
+    if (thenAddCredit && savedCustomer) {
+      setTimeout(() => {
+        openAddTrx(null, savedCustomer)
+      }, 100)
+    }
   }
 
   const handleTrxDelete = async (id) => {
     if (!confirm('Apakah Anda yakin ingin menghapus data kredit ini? Tindakan ini tidak dapat dibatalkan.')) return
-    await fetch(`/api/transactions/${id}`, { method: 'DELETE' })
+    const res = await fetch(`/api/transactions/${id}`, { 
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+    if (!res.ok) {
+        const err = await res.json()
+        alert('Gagal: ' + err.error)
+    }
     setShowTrxModal(false)
+    fetchCustomers()
+  }
+
+  const handleDeleteCustomer = async (id) => {
+    if (!confirm('Apakah Anda yakin ingin menghapus pelanggan ini? Seluruh riwayat kredit pelanggan ini juga akan terhapus.')) return
+    const res = await fetch(`/api/customers/${id}`, { 
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+    if (!res.ok) {
+        const err = await res.json()
+        alert('Gagal: ' + err.error)
+    }
     fetchCustomers()
   }
 
@@ -276,6 +348,15 @@ export default function CustomersPage() {
                               <Edit3 className="w-3.5 h-3.5" />
                             </button>
                           )}
+                          {isSuperAdmin && (
+                            <button
+                              onClick={(e) => { e.stopPropagation(); handleDeleteCustomer(customer.id); }}
+                              className="p-2 rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-red-500 hover:border-red-200 hover:shadow-sm transition-all shadow-sm"
+                              title="Hapus Nasabah"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -285,9 +366,19 @@ export default function CustomersPage() {
                       <tr>
                         <td colSpan="6" className="bg-slate-50/50 p-0 border-b border-slate-200">
                           <div className="px-12 py-4 animate-fadeInDown">
-                            <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                              <Zap className="w-3 h-3" /> Daftar Kredit Aktif
-                            </h4>
+                            <div className="flex items-center justify-between mb-3">
+                              <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                <Zap className="w-3 h-3" /> Daftar Kredit Aktif
+                              </h4>
+                              {isAdmin && (
+                                <button 
+                                  onClick={(e) => openAddTrx(e, customer)}
+                                  className="text-[10px] font-bold text-primary-600 bg-primary-50 px-2 py-1 rounded-lg border border-primary-100 hover:bg-primary-100 transition-colors flex items-center gap-1"
+                                >
+                                  <Plus className="w-3 h-3" /> Tambah Kredit
+                                </button>
+                              )}
+                            </div>
                             <div className="grid grid-cols-1 gap-2">
                               {(customer.transactions || []).length === 0 ? (
                                 <p className="text-[11px] text-slate-400 italic py-2">Belum ada catatan kredit aktif</p>
@@ -395,9 +486,29 @@ export default function CustomersPage() {
               {/* Mobile Expanded Details */}
               {expandedRows[customer.id] && (
                 <div className="border-t border-slate-100 bg-slate-50/50 p-4 space-y-3 animate-fadeInDown">
-                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                    <Zap className="w-3 h-3 text-primary-500" /> Detail Kredit
-                  </h4>
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                        <Zap className="w-3 h-3 text-primary-500" /> Detail Kredit
+                      </h4>
+                      <div className="flex gap-2">
+                        {isSuperAdmin && (
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); handleDeleteCustomer(customer.id); }}
+                            className="text-[9px] font-bold text-red-600 px-2 py-1 bg-red-50 rounded-lg flex items-center gap-1"
+                          >
+                            <Trash2 className="w-2.5 h-2.5" /> Hapus Pelanggan
+                          </button>
+                        )}
+                        {isAdmin && (
+                          <button 
+                            onClick={(e) => openAddTrx(e, customer)}
+                            className="text-[9px] font-bold text-primary-600 px-2 py-1 bg-primary-50 rounded-lg flex items-center gap-1"
+                          >
+                            <Plus className="w-2.5 h-2.5" /> Tambah Kredit
+                          </button>
+                        )}
+                      </div>
+                    </div>
                   {(customer.transactions || []).length === 0 ? (
                     <p className="text-[10px] text-slate-400 italic">Belum ada kredit aktif</p>
                   ) : (
@@ -452,7 +563,7 @@ export default function CustomersPage() {
           <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 modal-overlay text-left">
             <div className="clean-card w-full max-w-[450px] p-6 animate-fadeInUp shadow-xl">
               <div className="flex items-center justify-between mb-5">
-                <h3 className="text-lg font-bold text-slate-900 italic">Edit Informasi <span className="gradient-text">Kredit</span></h3>
+                <h3 className="text-lg font-bold text-slate-900 italic">{editTrxData.id ? 'Edit Informasi' : 'Tambah'} <span className="gradient-text">Kredit</span></h3>
                 <button onClick={() => setShowTrxModal(false)} className="text-slate-400 hover:text-slate-600 bg-slate-100/50 hover:bg-slate-100 rounded-full p-1 transition-colors">
                   <X className="w-5 h-5" />
                 </button>
@@ -487,28 +598,51 @@ export default function CustomersPage() {
                 <div className="grid grid-cols-3 gap-3">
                   <div>
                     <label className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-1">Total Harga</label>
-                    <input type="number" value={editTrxData.totalPrice} onChange={e => setEditTrxData({...editTrxData, totalPrice: e.target.value})}
-                      className="input-modern" />
+                    <input 
+                      type="number" 
+                      value={(editTrxData.monthlyPayment || 0) * (editTrxData.tenor || 0)} 
+                      readOnly
+                      className="input-modern bg-slate-50 text-slate-500 font-bold cursor-not-allowed" 
+                    />
                   </div>
                   <div>
                     <label className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-1">Angsuran</label>
-                    <input type="number" value={editTrxData.monthlyPayment} onChange={e => setEditTrxData({...editTrxData, monthlyPayment: e.target.value})}
-                      className="input-modern" />
+                    <input 
+                      type="number" 
+                      value={editTrxData.monthlyPayment} 
+                      onChange={e => {
+                        const val = parseFloat(e.target.value) || 0
+                        setEditTrxData({...editTrxData, monthlyPayment: val, totalPrice: val * (editTrxData.tenor || 0)})
+                      }}
+                      className="input-modern" 
+                    />
                   </div>
                   <div>
                     <label className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-1">Tenor</label>
-                    <input type="number" value={editTrxData.tenor} onChange={e => setEditTrxData({...editTrxData, tenor: e.target.value})}
-                      className="input-modern" />
+                    <select 
+                      value={editTrxData.tenor} 
+                      onChange={e => {
+                        const val = parseInt(e.target.value) || 0
+                        setEditTrxData({...editTrxData, tenor: val, totalPrice: (editTrxData.monthlyPayment || 0) * val})
+                      }}
+                      className="input-modern"
+                    >
+                      {[3, 6, 9, 12].map(t => (
+                        <option key={t} value={t}>{t} Bulan</option>
+                      ))}
+                    </select>
                   </div>
                 </div>
               </div>
               <div className="flex gap-2 mt-6">
-                <button 
-                  onClick={() => handleTrxDelete(editTrxData.id)} 
-                  className="px-4 py-2 text-xs font-bold text-red-500 hover:bg-red-50 rounded-xl transition-all"
-                >
-                  Hapus
-                </button>
+                {isSuperAdmin && (
+                  <button 
+                    onClick={() => handleTrxDelete(editTrxData.id)} 
+                    className="px-4 py-2 text-xs font-bold text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                  >
+                    Hapus Kredit
+                  </button>
+                )}
                 <div className="flex-1"></div>
                 <button onClick={() => setShowTrxModal(false)} className="px-4 py-2 btn-secondary text-xs">Batal</button>
                 <button onClick={handleTrxSubmit} className="px-6 py-2 btn-primary text-xs flex items-center gap-2">
@@ -539,8 +673,14 @@ export default function CustomersPage() {
               <div className="space-y-4">
                 <div>
                   <label className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block mb-1">Nama Lengkap <span className="text-red-500">*</span></label>
-                  <input type="text" value={form.name} onChange={e => setForm({...form, name: e.target.value})}
-                    placeholder="Masukkan nama nasabah" className="input-modern" />
+                  <input 
+                    type="text" 
+                    value={form.name} 
+                    onChange={e => setForm({...form, name: e.target.value})}
+                    placeholder="Masukkan nama nasabah" 
+                    className="input-modern"
+                    autoFocus 
+                  />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
@@ -555,11 +695,20 @@ export default function CustomersPage() {
                   </div>
                 </div>
               </div>
-              <div className="flex gap-2 mt-5">
-                <button onClick={() => setShowModal(false)} className="flex-1 btn-secondary text-sm">Batal</button>
-                <button onClick={handleSubmit} className="flex-1 btn-primary text-sm flex items-center justify-center gap-2">
-                  <Check className="w-4 h-4" /> {editCustomer ? 'Simpan' : 'Tambah'}
-                </button>
+              <div className="flex flex-col gap-3 mt-6">
+                <div className="flex gap-2">
+                  <button onClick={() => setShowModal(false)} className="flex-1 px-4 py-2.5 bg-white border border-slate-200 text-slate-500 rounded-xl font-bold text-sm hover:bg-slate-50 transition-all">
+                    Batal
+                  </button>
+                  <button onClick={() => handleSubmit(false)} className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg shadow-primary-100 transition-all transform active:scale-95">
+                    <Check className="w-4 h-4" /> {editCustomer ? 'Simpan Perubahan' : 'Simpan Saja'}
+                  </button>
+                </div>
+                {!editCustomer && (
+                  <button onClick={() => handleSubmit(true)} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-xl shadow-emerald-200 glow-green-sm transition-all transform active:scale-95 border-b-4 border-emerald-800/20">
+                    <Zap className="w-4 h-4" /> Simpan & Tambah Kredit
+                  </button>
+                )}
               </div>
             </div>
           </div>
